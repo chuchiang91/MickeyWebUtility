@@ -14,9 +14,15 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
+    
+    - name: List directory contents
+      run: ls -la
         
     - name: Publish .NET Core Project
-      run: dotnet publish MickeyWebUtility.csproj -c Release -o release --nologo
+      run: |
+        project_file=$(ls *.csproj)
+        echo "Found project file: $project_file"
+        dotnet publish "$project_file" -c Release -o release --nologo
     
     - name: Change base-tag in index.html
       run: sed -i 's/<base href="\/" \/>/<base href="\/MickeyWebUtility\/" \/>/g' release/wwwroot/index.html
