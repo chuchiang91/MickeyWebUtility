@@ -13,13 +13,8 @@ jobs:
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 8.0.x
     
-    - name: List directory structure
-      run: |
-        echo "Repository root contents:"
-        ls -R
-
     - name: Find and publish .NET Core Project
       run: |
         project_file=$(find . -name "*.csproj" -type f -print -quit)
