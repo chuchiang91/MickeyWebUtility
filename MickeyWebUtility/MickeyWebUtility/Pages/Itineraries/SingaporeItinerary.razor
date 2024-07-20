@@ -1,0 +1,125 @@
+﻿@page "/itineraries/singapore"
+@using MickeyWebUtility.Models
+@using MickeyWebUtility.Services
+@inject SGItineraryService ItineraryService
+@inject IJSRuntime JSRuntime
+<link href="css/Itineraries/Itinerary.css" rel="stylesheet" />
+
+
+
+<div class="itinerary-container">
+    <h1>Singapore Trip Itinerary</h1>
+    <div class="itinerary-tabs">
+        @foreach (var day in itineraryData.Keys)
+        {
+            <button class="@GetTabClass(day)" @onclick="() => SetActiveTab(day)">
+                Day @(Array.IndexOf(itineraryData.Keys.ToArray(), day) + 1) (@GetDate(day))
+            </button>
+        }
+    </div>
+    @if (!string.IsNullOrEmpty(activeTab) && itineraryData.ContainsKey(activeTab))
+    {
+        <div class="itinerary-card">
+            <div class="itinerary-card-header">
+                <h3 class="itinerary-card-title">Day @(Array.IndexOf(itineraryData.Keys.ToArray(), activeTab) + 1) - @GetDate(activeTab)</h3>
+            </div>
+            <div class="itinerary-card-content">
+                @foreach (var (item, index) in itineraryData[activeTab].Select((item, index) => (item, index)))
+                {
+                    <div class="itinerary-item">
+                        <div class="itinerary-item-icon">
+                            <span class="itinerary-icon @GetIconClass(item.Icon)"></span>
+                        </div>
+                        <div class="itinerary-item-details">
+                            <p class="itinerary-item-time">@item.Time</p>
+                            <p class="itinerary-item-activity">
+                                <input type="checkbox" checked="@item.IsChecked" @onchange="async (e) => await ToggleChecked(activeTab, index, e.Value)" />
+                                <span class="@(item.IsChecked ? "checked" : "")">@item.Activity</span>
+                            </p>
+                            @if (!string.IsNullOrEmpty(item.Location))
+                            {
+                                <p class="itinerary-item-location">@item.Location</p>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private Dictionary<string, List<Itinerary>> itineraryData;
+    private string activeTab = "day1";
+
+    protected override async Task OnInitializedAsync()
+    {
+        itineraryData = ItineraryService.GetSingaporeItinerary();
+        await LoadCheckedItems();
+    }
+
+    private string GetTabClass(string tab)
+    {
+        return $"itinerary-tab {(activeTab == tab ? "active" : "")}";
+    }
+
+
+
+    private void SetActiveTab(string tab)
+    {
+        activeTab = tab;
+    }
+
+    private string GetIconClass(string icon)
+    {
+        return $"itinerary-icon-{icon.ToLower()}";
+    }
+
+    private string GetDate(string day)
+    {
+        return day switch
+        {
+            "day1" => "30 May",
+            "day2" => "31 May",
+            "day3" => "1 June",
+            _ => ""
+        };
+    }
+
+    private async Task LoadCheckedItems()
+    {
+        foreach (var day in itineraryData.Keys)
+        {
+            for (int i = 0; i < itineraryData[day].Count; i++)
+            {
+                var key = $"singapore-itinerary-{day}-{i}";
+                var isChecked = await GetLocalStorageItem<bool>(key);
+                itineraryData[day][i].IsChecked = isChecked;
+            }
+        }
+    }
+
+    private async Task ToggleChecked(string day, int index, object isCheckedObj)
+    {
+        if (isCheckedObj is bool isChecked)
+        {
+            itineraryData[day][index].IsChecked = isChecked;
+            var key = $"singapore-itinerary-{day}-{index}";
+            await SetLocalStorageItem(key, isChecked);
+        }
+    }
+
+    private async Task<T> GetLocalStorageItem<T>(string key)
+    {
+        var json = await JSRuntime.InvokeAsync<string>("localStorage.getItem", key);
+        if (string.IsNullOrEmpty(json))
+            return default;
+        return System.Text.Json.JsonSerializer.Deserialize<T>(json);
+    }
+
+    private async Task SetLocalStorageItem<T>(string key, T value)
+    {
+        var json = System.Text.Json.JsonSerializer.Serialize(value);
+        await JSRuntime.InvokeVoidAsync("localStorage.setItem", key, json);
+    }
+}
