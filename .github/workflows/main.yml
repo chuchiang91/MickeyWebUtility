@@ -15,14 +15,21 @@ jobs:
       with:
         dotnet-version: 6.0.x
     
-    - name: List directory contents
-      run: ls -la
-        
-    - name: Publish .NET Core Project
+    - name: List directory structure
       run: |
-        project_file=$(ls *.csproj)
-        echo "Found project file: $project_file"
-        dotnet publish "$project_file" -c Release -o release --nologo
+        echo "Repository root contents:"
+        ls -R
+
+    - name: Find and publish .NET Core Project
+      run: |
+        project_file=$(find . -name "*.csproj" -type f -print -quit)
+        if [ -z "$project_file" ]; then
+          echo "No .csproj file found in the repository"
+          exit 1
+        else
+          echo "Found project file: $project_file"
+          dotnet publish "$project_file" -c Release -o release --nologo
+        fi
     
     - name: Change base-tag in index.html
       run: sed -i 's/<base href="\/" \/>/<base href="\/MickeyWebUtility\/" \/>/g' release/wwwroot/index.html
