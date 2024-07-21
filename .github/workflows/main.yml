@@ -32,11 +32,10 @@ jobs:
     - name: List contents of release/wwwroot
       run: ls -R release/wwwroot
 
-    - name: Deploy to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@v4
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v1
       with:
-        branch: gh-pages
-        folder: release/wwwroot
+        path: 'release/wwwroot'
 
   deploy:
     needs: build
@@ -48,3 +47,6 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
+
+      - name: Print deployment URL
+        run: echo "Deployed to ${{ steps.deployment.outputs.page_url }}"
