@@ -20,21 +20,13 @@ jobs:
       with:
         dotnet-version: 8.0.x
     
-    - name: Find and publish .NET Core Project
-      run: |
-        project_file=$(find . -name "*.csproj" -type f -print -quit)
-        if [ -z "$project_file" ]; then
-          echo "No .csproj file found in the repository"
-          exit 1
-        else
-          echo "Found project file: $project_file"
-          dotnet publish "$project_file" -c Release -o release --nologo
-        fi
-    
+    - name: Publish .NET Core Project
+      run: dotnet publish MickeyWebUtility/MickeyWebUtility/MickeyWebUtility.csproj -c Release -o release --nologo
+
     - name: Change base-tag in index.html
       run: sed -i 's/<base href="\/" \/>/<base href="\/MickeyWebUtility\/" \/>/g' release/wwwroot/index.html
     
-    - name: copy index.html to 404.html
+    - name: Copy index.html to 404.html
       run: cp release/wwwroot/index.html release/wwwroot/404.html
       
     - name: Add .nojekyll file
