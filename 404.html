@@ -4,11 +4,33 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MickeyWebUtility</title>
-    <base href="/MickeyWebUtility/" />
+    <base href="/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link rel="stylesheet" href="css/app.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <link href="MickeyWebUtility.styles.css" rel="stylesheet" />
+    <script type="text/javascript">
+        var segmentCount = 1;
+        var location = window.location;
+        var repo = "MickeyWebUtility"; // Your repository name
+        var baseUrl = "/";
+
+        if (location.hostname !== "localhost") {
+            var paths = location.pathname.split('/');
+            if (paths.length > segmentCount) {
+                baseUrl = paths.slice(0, 1 + segmentCount).join('/') + '/';
+            }
+        }
+
+        document.write('<base href="' + baseUrl + '" />');
+
+        // Redirect to base URL when a 404 occurs
+        window.addEventListener('load', function () {
+            if (location.pathname.split('/').length > segmentCount + 1) {
+                location.replace(baseUrl + location.pathname.split('/').slice(segmentCount + 1).join('/'));
+            }
+        });
+    </script>
 </head>
 <body>
     <div id="app">Loading...</div>
@@ -19,14 +41,6 @@
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
     <script>
-        var path = window.location.pathname.split('/');
-        var base = document.getElementsByTagName('base')[0];
-        if (path.length > 2) {
-            base.setAttribute('href', '/' + path[1] + '/');
-        } else {
-            base.setAttribute('href', '/');
-        }
-
         window.readFileContents = async (fileName) => {
             const response = await fetch(fileName);
             if (!response.ok) {
