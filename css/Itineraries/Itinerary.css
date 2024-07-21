@@ -1,0 +1,123 @@
+﻿.itinerary-container {
+    max-width: 42rem; /* equivalent to max-w-2xl */
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1rem;
+}
+
+    .itinerary-container h1 {
+        font-size: 1.875rem; /* equivalent to text-3xl */
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+.itinerary-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.itinerary-tab {
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    background-color: #e2e8f0;
+    color: #4a5568;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+    .itinerary-tab.active {
+        background-color: #3490dc;
+        color: white;
+    }
+
+.itinerary-card {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+}
+
+.itinerary-card-header {
+    padding: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.itinerary-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.itinerary-card-content {
+    padding: 1rem;
+}
+
+.itinerary-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.itinerary-item-icon {
+    margin-right: 1rem;
+    margin-top: 0.25rem;
+}
+
+.itinerary-item-details {
+    flex: 1;
+}
+
+.itinerary-item-time {
+    font-weight: 600;
+}
+
+.itinerary-item-activity {
+    margin-bottom: 0.25rem;
+}
+
+.itinerary-item-location {
+    font-size: 0.875rem;
+    color: #718096;
+}
+
+/* Icons */
+.itinerary-icon::before {
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    font-family: "Arial", sans-serif;
+    margin-right: 5px;
+}
+
+.itinerary-icon-home::before {
+    content: '🏠';
+}
+
+.itinerary-icon-plane::before {
+    content: '✈️';
+}
+
+.itinerary-icon-utensils::before {
+    content: '🍴';
+}
+
+.itinerary-icon-hotel::before {
+    content: '🏨';
+}
+
+.itinerary-icon-coffee::before {
+    content: '☕';
+}
+
+.itinerary-icon-camera::before {
+    content: '📷';
+}
+
+.itinerary-icon-sun::before {
+    content: '☀️';
+}
