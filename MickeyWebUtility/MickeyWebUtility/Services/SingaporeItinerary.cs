@@ -2,7 +2,7 @@
 
 namespace MickeyWebUtility.Services
 {
-    public class SGItineraryService
+    public class SingaporeItinerary
     {
         public Dictionary<string, List<Itinerary>> GetSingaporeItinerary()
         {
