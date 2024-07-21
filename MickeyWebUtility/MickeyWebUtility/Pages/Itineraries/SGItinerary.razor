@@ -1,0 +1,94 @@
+﻿@page "/sgitinerary"
+@using MickeyWebUtility.Models
+@using MickeyWebUtility.Services
+@inject SGItineraryService ItineraryService
+@inject ILogger<SGItinerary> Logger
+
+<link href="css/Itineraries/Itinerary.css" rel="stylesheet" />
+
+<div class="itinerary-container">
+    <h1>Singapore Trip Itinerary</h1>
+    @if (errorMessage != null)
+    {
+        <p class="error">@errorMessage</p>
+    }
+    else if (itineraryData == null)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+        <div class="itinerary-tabs">
+            @foreach (var day in itineraryData.Keys)
+            {
+                <button class="@GetTabClass(day)" @onclick="() => SetActiveTab(day)">
+                    Day @(Array.IndexOf(itineraryData.Keys.ToArray(), day) + 1) (@itineraryData[day].Date)
+                </button>
+            }
+        </div>
+        @if (!string.IsNullOrEmpty(activeTab) && itineraryData.ContainsKey(activeTab))
+        {
+            <div class="itinerary-card">
+                <div class="itinerary-card-header">
+                    <h3 class="itinerary-card-title">Day @(Array.IndexOf(itineraryData.Keys.ToArray(), activeTab) + 1) - @itineraryData[activeTab].Date</h3>
+                </div>
+                <div class="itinerary-card-content">
+                    @foreach (var item in itineraryData[activeTab].Items)
+                    {
+                        <div class="itinerary-item">
+                            <div class="itinerary-item-icon">
+                                <span class="itinerary-icon @GetIconClass(item.Icon)"></span>
+                            </div>
+                            <div class="itinerary-item-details">
+                                <p class="itinerary-item-time">@item.Time</p>
+                                <p class="itinerary-item-activity">@item.Activity</p>
+                                @if (!string.IsNullOrEmpty(item.Location))
+                                {
+                                    <p class="itinerary-item-location">@item.Location</p>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    private Dictionary<string, (string Date, List<Itinerary> Items)> itineraryData;
+    private string activeTab = "day1";
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            itineraryData = await ItineraryService.GetSingaporeItinerary();
+            if (itineraryData.Count > 0)
+            {
+                activeTab = itineraryData.Keys.First();
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error fetching itinerary data");
+            errorMessage = "An error occurred while fetching the itinerary. Please try again later.";
+        }
+    }
+
+    private string GetTabClass(string tab)
+    {
+        return $"itinerary-tab {(activeTab == tab ? "active" : "")}";
+    }
+
+    private void SetActiveTab(string tab)
+    {
+        activeTab = tab;
+    }
+
+    private string GetIconClass(string icon)
+    {
+        return $"itinerary-icon-{icon.ToLower()}";
+    }
+}

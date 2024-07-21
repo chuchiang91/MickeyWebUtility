@@ -26,6 +26,14 @@
         } else {
             base.setAttribute('href', '/');
         }
+
+        window.readFileContents = async (fileName) => {
+            const response = await fetch(fileName);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return await response.text();
+        };
     </script>
 </body>
 </html>
