@@ -25,7 +25,7 @@ jobs:
 
     - name: Update base href in index.html
       run: |
-        sed -i 's|<base href="/" />|<script>document.write("<base href=\"" + (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" ? "/" : "/MickeyWebUtility/") + "\" />");</script>|g' release/wwwroot/index.html
+        sed -i 's@<base href="/" />@<script>document.write("<base href=\"" + (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" ? "/" : "/MickeyWebUtility/") + "\" />");</script>@g' release/wwwroot/index.html
 
     - name: Copy index.html to 404.html
       run: cp release/wwwroot/index.html release/wwwroot/404.html
