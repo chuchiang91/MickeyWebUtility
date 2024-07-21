@@ -23,6 +23,8 @@
         var base = document.getElementsByTagName('base')[0];
         if (path.length > 2) {
             base.setAttribute('href', '/' + path[1] + '/');
+        } else {
+            base.setAttribute('href', '/');
         }
     </script>
 </body>
