@@ -32,9 +32,6 @@ jobs:
     - name: Add .nojekyll file
       run: touch release/wwwroot/.nojekyll
 
-    - name: List contents of release/wwwroot
-      run: ls -R release/wwwroot
-
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v1
       with:
@@ -50,6 +47,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
-
-      - name: Print deployment URL
-        run: echo "Deployed to ${{ steps.deployment.outputs.page_url }}"

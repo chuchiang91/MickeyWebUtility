@@ -4,46 +4,34 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MickeyWebUtility</title>
-    <base href="/" />
+    <base href="/MickeyWebUtility/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link rel="stylesheet" href="css/app.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <link href="MickeyWebUtility.styles.css" rel="stylesheet" />
+    <script type="text/javascript">
+        // Single Page Apps for GitHub Pages
+        // MIT License
+        // https://github.com/rafgraph/spa-github-pages
+        (function (l) {
+            if (l.search[1] === '/') {
+                var decoded = l.search.slice(1).split('&').map(function (s) {
+                    return s.replace(/~and~/g, '&')
+                }).join('?');
+                window.history.replaceState(null, null,
+                    l.pathname.slice(0, -1) + decoded + l.hash
+                );
+            }
+        }(window.location))
+    </script>
 </head>
 <body>
-    <div id="app">
-        <svg class="loading-progress">
-            <circle r="40%" cx="50%" cy="50%" />
-            <circle r="40%" cx="50%" cy="50%" />
-        </svg>
-        <div class="loading-progress-text"></div>
-    </div>
-
+    <div id="app">Loading...</div>
     <div id="blazor-error-ui">
         An unhandled error has occurred.
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
-    <script>
-        var baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
-        var scriptElement = document.querySelector('script[src]');
-        if (scriptElement) {
-            var currentSrc = scriptElement.getAttribute('src');
-            scriptElement.setAttribute('src', baseUrl + currentSrc);
-        }
-    </script>
-    <script>
-        (function () {
-            var pathname = window.location.pathname;
-            var baseHref = document.querySelector('base').getAttribute('href');
-
-            if (pathname.startsWith(baseHref) && pathname !== baseHref) {
-                var segmentsToKeep = baseHref.split('/').filter(function (segment) { return segment.length > 0; }).length;
-                var newPathname = pathname.split('/').slice(segmentsToKeep).join('/');
-                window.history.replaceState(null, '', baseHref + newPathname + window.location.search + window.location.hash);
-            }
-        })();
-    </script>
 </body>
 </html>
