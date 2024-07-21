@@ -5,34 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MickeyWebUtility</title>
     <base href="/" />
-    <script>
-        // Dynamically set base href
-        (function () {
-            var baseHref = '/';
-            if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-                baseHref = '/MickeyWebUtility/';
-            }
-            document.write('<base href="' + baseHref + '" />');
-
-            // Update resource paths
-            function updateResourcePath(selector, attribute) {
-                var elements = document.querySelectorAll(selector);
-                elements.forEach(function (el) {
-                    var path = el.getAttribute(attribute);
-                    if (path && !path.startsWith('http') && !path.startsWith('//')) {
-                        el.setAttribute(attribute, baseHref + path);
-                    }
-                });
-            }
-
-            document.addEventListener('DOMContentLoaded', function () {
-                updateResourcePath('link[rel="stylesheet"]', 'href');
-                updateResourcePath('link[rel="icon"]', 'href');
-                updateResourcePath('link[rel="manifest"]', 'href');
-                updateResourcePath('link[rel="apple-touch-icon"]', 'href');
-            });
-        })();
-    </script>
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link rel="stylesheet" href="css/app.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
@@ -56,29 +28,29 @@
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
     <script>
-        var baseHref = '/';
-        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-            baseHref = '/MickeyWebUtility/';
+        window.getBaseHref = function () {
+            return (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+                ? '/'
+                : '/MickeyWebUtility/';
         }
+    </script>
+    <script>
+        var baseHref = window.getBaseHref();
+        document.querySelector('base').setAttribute('href', baseHref);
         navigator.serviceWorker.register(baseHref + 'service-worker.js', { scope: baseHref });
     </script>
     <script type="text/javascript">
         // Single Page Apps for GitHub Pages
-        // https://github.com/rafrex/spa-github-pages
+        // MIT License
+        // https://github.com/rafgraph/spa-github-pages
         (function (l) {
-            if (l.search) {
-                var q = {};
-                l.search.slice(1).split('&').forEach(function (v) {
-                    var a = v.split('=');
-                    q[a[0]] = a.slice(1).join('=').replace(/~and~/g, '&');
-                });
-                if (q.p !== undefined) {
-                    window.history.replaceState(null, null,
-                        l.pathname.slice(0, -1) + (q.p || '') +
-                        (q.q ? ('?' + q.q) : '') +
-                        l.hash
-                    );
-                }
+            if (l.search[1] === '/') {
+                var decoded = l.search.slice(1).split('&').map(function (s) {
+                    return s.replace(/~and~/g, '&')
+                }).join('?');
+                window.history.replaceState(null, null,
+                    l.pathname.slice(0, -1) + decoded + l.hash
+                );
             }
         }(window.location))
     </script>
