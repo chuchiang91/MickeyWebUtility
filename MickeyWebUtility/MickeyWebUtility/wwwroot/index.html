@@ -33,5 +33,17 @@
             scriptElement.setAttribute('src', baseUrl + currentSrc);
         }
     </script>
+    <script>
+        (function () {
+            var pathname = window.location.pathname;
+            var baseHref = document.querySelector('base').getAttribute('href');
+
+            if (pathname.startsWith(baseHref) && pathname !== baseHref) {
+                var segmentsToKeep = baseHref.split('/').filter(function (segment) { return segment.length > 0; }).length;
+                var newPathname = pathname.split('/').slice(segmentsToKeep).join('/');
+                window.history.replaceState(null, '', baseHref + newPathname + window.location.search + window.location.hash);
+            }
+        })();
+    </script>
 </body>
 </html>
