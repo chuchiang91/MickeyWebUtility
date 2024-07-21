@@ -19,7 +19,6 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
-[Oo]ut/
 msbuild.log
 msbuild.err
 msbuild.wrn
@@ -66,37 +65,5 @@ artifacts/
 *.nuget.props
 *.nuget.targets
 
-## Microsoft Azure Build Output
-csx/
-*.build.csdef
-
-## Microsoft Azure Emulator
-ecf/
-rcf/
-
-## Windows Store app package directories and files
-AppPackages/
-BundleArtifacts/
-Package.StoreAssociation.xml
-_pkginfo.txt
-*.appx
-*.appxbundle
-*.appxupload
-
-## Visual Studio cache files
-*.[Cc]ache
-!?*.[Cc]ache/
-
-## Others
-ClientBin/
-~$*
-*~
-*.dbmdl
-*.dbproj.schemaview
-*.jfm
-*.pfx
-*.publishsettings
-orleans.codegen.cs
-
-# Exclude wwwroot/dist which contains the published files
-!/wwwroot/dist/
+# Exclude wwwroot from gitignore
+!/wwwroot/
