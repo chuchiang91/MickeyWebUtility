@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MickeyWebUtility</title>
-    <base href="/MickeyWebUtility/" />
+    <base href="/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link rel="stylesheet" href="css/app.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
@@ -33,5 +33,13 @@
         <a class="dismiss">🗙</a>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
+    <script>
+        // Set the correct base href
+        var baseHref = '/';
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+            baseHref = '/MickeyWebUtility/';
+        }
+        document.querySelector('base').setAttribute('href', baseHref);
+    </script>
 </body>
 </html>
