@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "MickeyWebUtility",
   "resources": {
-    "hash": "sha256-8lj3O7CTSHKckHejfhLqQhHOCuIK6Fd7ORrRudaNUtA=",
+    "hash": "sha256-XT8bC5vQr6cHK3B/GfYojpzUm425XSFF30RWBQMzLs0=",
     "jsModuleNative": {
       "dotnet.native.8.0.7.pvkr2na9g4.js": "sha256-tFsxPBbhkdn6GKNBKvCRLzrfAHdyM86odYTe0MtrwMk="
     },
@@ -21,7 +21,7 @@
       "Google.Apis.Core.wasm": "sha256-ZJbUx6BHuzcdqeDElFsJ1+cYzyTyVisWXwQWJjMxixY=",
       "Google.Apis.Sheets.v4.wasm": "sha256-yDEvtfxbxut5+HQNMDuGxtiRUwQ9nN8nz9dLpqPWOaU=",
       "Google.Apis.wasm": "sha256-XcsNSetbd049F/SxdqrKodylx/hxhc7VhTmTARzfCH4=",
-      "MickeyWebUtility.wasm": "sha256-hCX0cmxXRKDlR5jhMd2YF6wfQHJnMjLjwmTt/THupQE=",
+      "MickeyWebUtility.wasm": "sha256-eOkhLDTRynAEoyF7N0huFsPgeT+u8VgDdn2SF21OjmY=",
       "Microsoft.AspNetCore.Components.wasm": "sha256-fWEf2fn8vn32FxUZduvxo7dw2vT30YMIW0aaXmfQXB0=",
       "Microsoft.AspNetCore.Components.Web.wasm": "sha256-VnMUskpCPmW1fX4qZihu4ZyOPWe/cSBWh229O8+OZxU=",
       "Microsoft.AspNetCore.Components.WebAssembly.wasm": "sha256-EQ7jUyZxZLmbfDJyRzjr7Nf08Cdvxht/na4ZBba/LUc=",
