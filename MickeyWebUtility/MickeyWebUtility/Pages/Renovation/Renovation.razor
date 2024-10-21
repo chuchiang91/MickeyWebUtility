@@ -5,75 +5,74 @@
 @inject ILogger<Renovation> Logger
 <link href="css/Renovation//Renovation.css" rel="stylesheet" />
 <div class="renovation-dashboard">
-    <div class="sidebar">
-        <h1 class="dashboard-title">Renovation</h1>
-        <div class="category-list">
-            @foreach (var category in groupedItems?.Keys ?? Enumerable.Empty<string>())
-            {
-                <button class="category-button @(category == selectedCategory ? "active" : "")"
-                        @onclick="() => SelectCategory(category)">
-                    @category
-                </button>
-            }
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">Renovation Dashboard</h1>
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search..." @bind="searchTerm" @bind:event="oninput" />
+            <span class="search-icon">&#128269;</span>
         </div>
     </div>
 
-    <div class="main-content">
-        <div class="top-bar">
-            <div class="search-container">
-                <input type="text" class="search-input" placeholder="Search items..." @bind="searchTerm" @bind:event="oninput" />
-                <span class="search-icon">&#128269;</span>
-            </div>
-            <div class="total-cost">
-                Total Cost: <span class="cost-value">@totalCost.ToString("C2")</span>
-            </div>
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="error-message">
+            @errorMessage
+        </div>
+    }
+    else if (renovationItems == null)
+    {
+        <div class="loading-spinner"></div>
+    }
+    else if (!renovationItems.Any())
+    {
+        <div class="info-message">
+            No renovation items found.
+        </div>
+    }
+    else
+    {
+        <div class="total-cost">
+            Total Renovation Cost: <span class="cost-value">@totalCost.ToString("C2")</span>
         </div>
 
-        @if (!string.IsNullOrEmpty(errorMessage))
-        {
-            <div class="error-message">
-                @errorMessage
-            </div>
-        }
-        else if (renovationItems == null)
-        {
-            <div class="loading-spinner"></div>
-        }
-        else if (!renovationItems.Any())
-        {
-            <div class="info-message">
-                No renovation items found.
-            </div>
-        }
-        else
-        {
-            <div class="category-content">
-                <h2 class="category-title">@selectedCategory</h2>
-                <div class="category-summary">
-                    <div class="summary-item">
-                        <span class="summary-label">Total Items:</span>
-                        <span class="summary-value">@groupedItems[selectedCategory].Count</span>
+        <div class="category-grid">
+            @foreach (var category in groupedItems.Keys)
+            {
+                var categoryItems = groupedItems[category];
+                var categoryTotal = categoryItems.Sum(item => item.TotalPrice);
+                var latestPurchaseDate = categoryItems.Max(item => item.PurchaseDate);
+                var shops = categoryItems.Select(item => item.ShopName).Distinct();
+                var contacts = categoryItems.Select(item => item.Contact).Distinct();
+
+                <div class="category-card" @onclick="() => ToggleCategory(category)">
+                    <h2 class="category-title">@category</h2>
+                    <div class="category-summary">
+                        <p>Total: @categoryTotal.ToString("C2")</p>
+                        <p>Items: @categoryItems.Count</p>
+                        <p>Latest Purchase: @(latestPurchaseDate?.ToShortDateString() ?? "N/A")</p>
+                        <p>Shops: @string.Join(", ", shops)</p>
+                        <p>Contacts: @string.Join(", ", contacts)</p>
                     </div>
-                    <div class="summary-item">
-                        <span class="summary-label">Category Total:</span>
-                        <span class="summary-value">@groupedItems[selectedCategory].Sum(item => item.TotalPrice).ToString("C2")</span>
-                    </div>
-                </div>
-                <div class="item-cards">
-                    @foreach (var item in groupedItems[selectedCategory].Where(i => i.ItemName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)))
+
+                    @if (expandedCategory == category)
                     {
-                        <div class="item-card" @onclick="() => ShowDetails(item)">
-                            <h3 class="item-name">@item.ItemName</h3>
-                            <p class="item-quantity">@item.Quantity @item.Measurement</p>
-                            <p class="item-price">@item.TotalPrice.ToString("C2")</p>
-                            <p class="item-date">@(item.PurchaseDate?.ToShortDateString() ?? "N/A")</p>
-                            <p class="item-shop">@item.ShopName</p>
+                        <div class="item-list">
+                            @foreach (var item in categoryItems.Where(i => i.ItemName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)))
+                            {
+                                <div class="item-card" @onclick="() => ShowDetails(item)">
+                                    <h3 class="item-name">@item.ItemName</h3>
+                                    <p class="item-details">
+                                        @item.Quantity @item.Measurement
+                                        <span class="item-price">@item.TotalPrice.ToString("C2")</span>
+                                    </p>
+                                </div>
+                            }
                         </div>
                     }
                 </div>
-            </div>
-        }
-    </div>
+            }
+        </div>
+    }
 </div>
 
 @if (selectedItem != null)
@@ -81,11 +80,10 @@
     <div class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Item Details</h2>
+                <h2>@selectedItem.ItemName</h2>
                 <button class="close-button" @onclick="CloseModal">&times;</button>
             </div>
             <div class="modal-body">
-                <p><strong>Item Name:</strong> @selectedItem.ItemName</p>
                 <p><strong>Quantity:</strong> @selectedItem.Quantity @selectedItem.Measurement</p>
                 <p><strong>Unit Price:</strong> @selectedItem.UnitPrice.ToString("C2")</p>
                 <p><strong>Total Price:</strong> @selectedItem.TotalPrice.ToString("C2")</p>
@@ -98,7 +96,7 @@
             </div>
         </div>
     </div>
-    <div class="modal-backdrop"></div>
+    <div class="modal-backdrop" @onclick="CloseModal"></div>
 }
 
 @code {
@@ -108,7 +106,7 @@
     private decimal totalCost;
     private RenovationItem selectedItem;
     private string searchTerm = "";
-    private string selectedCategory;
+    private string expandedCategory;
 
     protected override async Task OnInitializedAsync()
     {
@@ -121,7 +119,6 @@
             {
                 GroupItems();
                 CalculateTotalCost();
-                selectedCategory = groupedItems.Keys.FirstOrDefault();
                 Logger.LogInformation($"Grouped items: {groupedItems?.Count ?? 0} categories");
                 Logger.LogInformation($"Total cost: {totalCost}");
             }
@@ -160,8 +157,15 @@
         selectedItem = null;
     }
 
-    private void SelectCategory(string category)
+    private void ToggleCategory(string category)
     {
-        selectedCategory = category;
+        if (expandedCategory == category)
+        {
+            expandedCategory = null;
+        }
+        else
+        {
+            expandedCategory = category;
+        }
     }
 }
