@@ -1,0 +1,210 @@
+﻿@page "/renovation"
+@using MickeyWebUtility.Models
+@using MickeyWebUtility.Services
+@inject RenovationService RenovationService
+@inject ILogger<Renovation> Logger
+<link href="css/Renovation/Renovation.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet">
+
+<div class="renovation-dashboard">
+    <h1 class="dashboard-title">Renovation Dashboard</h1>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            @errorMessage
+        </div>
+    }
+    else if (renovationItems == null)
+    {
+        <div class="loading-spinner">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+    else if (!renovationItems.Any())
+    {
+        <div class="alert alert-info" role="alert">
+            No renovation items found.
+        </div>
+    }
+    else
+    {
+        <div class="dashboard-header">
+            <div class="search-container">
+                <i class="bx bx-search"></i>
+                <input type="text" class="form-control search-input" placeholder="Search items..." @bind="searchTerm" @bind:event="oninput" />
+            </div>
+            <div class="total-cost">
+                Total Renovation Cost: <span class="cost-value">@totalCost.ToString("C2")</span>
+            </div>
+        </div>
+
+        <div class="category-tabs">
+            <ul class="nav nav-tabs" id="categoryTabs" role="tablist">
+                @foreach (var category in groupedItems.Keys)
+                {
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link @(category == selectedCategory ? "active" : "")"
+                                id="@category-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#@category"
+                                type="button"
+                                role="tab"
+                                aria-controls="@category"
+                                aria-selected="@(category == selectedCategory)"
+                                @onclick="() => SelectCategory(category)">
+                            @category
+                        </button>
+                    </li>
+                }
+            </ul>
+        </div>
+
+        <div class="tab-content" id="categoryTabContent">
+            @foreach (var category in groupedItems.Keys)
+            {
+                <div class="tab-pane fade @(category == selectedCategory ? "show active" : "")"
+                     id="@category"
+                     role="tabpanel"
+                     aria-labelledby="@category-tab">
+                    <div class="category-summary">
+                        <h3>@category Summary</h3>
+                        <p>Total Items: @groupedItems[category].Count</p>
+                        <p>Category Total: @groupedItems[category].Sum(item => item.TotalPrice).ToString("C2")</p>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Item Name</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th>Total Price</th>
+                                    <th>Purchase Date</th>
+                                    <th>Shop Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in groupedItems[category].Where(i => i.ItemName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)))
+                                {
+                                    <tr>
+                                        <td>@item.ItemName</td>
+                                        <td>@item.Quantity @item.Measurement</td>
+                                        <td>@item.UnitPrice.ToString("C2")</td>
+                                        <td>@item.TotalPrice.ToString("C2")</td>
+                                        <td>@(item.PurchaseDate?.ToShortDateString() ?? "N/A")</td>
+                                        <td>@item.ShopName</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-info" @onclick="() => ShowDetails(item)">
+                                                <i class="bx bx-info-circle"></i> Details
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@if (selectedItem != null)
+{
+    <div class="modal fade show" style="display: block;" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Item Details</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Item Name:</strong> @selectedItem.ItemName</p>
+                    <p><strong>Quantity:</strong> @selectedItem.Quantity @selectedItem.Measurement</p>
+                    <p><strong>Unit Price:</strong> @selectedItem.UnitPrice.ToString("C2")</p>
+                    <p><strong>Total Price:</strong> @selectedItem.TotalPrice.ToString("C2")</p>
+                    <p><strong>Purchase Date:</strong> @(selectedItem.PurchaseDate?.ToShortDateString() ?? "N/A")</p>
+                    <p><strong>Shop Name:</strong> @selectedItem.ShopName</p>
+                    <p><strong>Salesperson:</strong> @selectedItem.Salesperson</p>
+                    <p><strong>Contact:</strong> @selectedItem.Contact</p>
+                    <p><strong>Invoice/Quotation Number:</strong> @selectedItem.InvoiceQuotationNumber</p>
+                    <p><strong>Category:</strong> @selectedItem.Category</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseModal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+}
+
+@code {
+    private List<RenovationItem> renovationItems;
+    private Dictionary<string, List<RenovationItem>> groupedItems;
+    private string errorMessage;
+    private decimal totalCost;
+    private RenovationItem selectedItem;
+    private string searchTerm = "";
+    private string selectedCategory;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            renovationItems = await RenovationService.GetRenovationItems();
+            Logger.LogInformation($"Received {renovationItems?.Count ?? 0} renovation items");
+
+            if (renovationItems != null && renovationItems.Any())
+            {
+                GroupItems();
+                CalculateTotalCost();
+                selectedCategory = groupedItems.Keys.FirstOrDefault();
+                Logger.LogInformation($"Grouped items: {groupedItems?.Count ?? 0} categories");
+                Logger.LogInformation($"Total cost: {totalCost}");
+            }
+            else
+            {
+                Logger.LogWarning("No renovation items received or list is empty");
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error fetching renovation data");
+            errorMessage = $"An error occurred while fetching the renovation data: {ex.Message}";
+        }
+    }
+
+    private void GroupItems()
+    {
+        groupedItems = renovationItems
+            .GroupBy(item => item.Category)
+            .OrderBy(group => group.Key)
+            .ToDictionary(group => group.Key, group => group.ToList());
+    }
+
+    private void CalculateTotalCost()
+    {
+        totalCost = renovationItems.Sum(item => item.TotalPrice);
+    }
+
+    private void ShowDetails(RenovationItem item)
+    {
+        selectedItem = item;
+    }
+
+    private void CloseModal()
+    {
+        selectedItem = null;
+    }
+
+    private void SelectCategory(string category)
+    {
+        selectedCategory = category;
+    }
+}
