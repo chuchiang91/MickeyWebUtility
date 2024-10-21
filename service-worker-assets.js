@@ -33,7 +33,7 @@
       "url": "_framework\/icudt_no_CJK.dat"
     },
     {
-      "hash": "sha256-Y608wd3U0Z1zdJrtfevW0dNnTS80msRNTjCKDoEHsRI=",
+      "hash": "sha256-vPxMsA56gQ3KGp5K4xQtPr95RCNiF664snR6kyfj5AY=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -53,7 +53,7 @@
       "url": "_framework\/Google.Apis.wasm"
     },
     {
-      "hash": "sha256-3qECBsiJznvlKrIHIyzg3GQhWbKXbcwVrWsd+wwjMjM=",
+      "hash": "sha256-lP0t\/vI\/JIpnLFhCvH6VgQYX2mvRmXvjx\/Wy8vkoMBE=",
       "url": "_framework\/MickeyWebUtility.wasm"
     },
     {
@@ -189,7 +189,7 @@
       "url": "_framework\/System.Linq.Expressions.wasm"
     },
     {
-      "hash": "sha256-MPsImuhCU1av8xkEXj7Ji1jCXRjFqpDtvKqE9LQJwXY=",
+      "hash": "sha256-6geAienAIulX0obem7xbwmIYHGov\/e6tuyXROhHDrKo=",
       "url": "_framework\/System.Linq.wasm"
     },
     {
@@ -361,7 +361,7 @@
       "url": "css\/Itineraries\/Itinerary.css"
     },
     {
-      "hash": "sha256-ZJILjkjXSzbjIZURj6cvIQo51wodGfcXdC4pSdWlDpk=",
+      "hash": "sha256-D1yT6QadkOzSJI+OdCRx1TG3y1niPMg4QJro5OGIRvc=",
       "url": "css\/Renovation\/Renovation.css"
     },
     {
@@ -389,5 +389,5 @@
       "url": "sample-data\/weather.json"
     }
   ],
-  "version": "1hwX3i66"
+  "version": "YVl5OPNu"
 };
