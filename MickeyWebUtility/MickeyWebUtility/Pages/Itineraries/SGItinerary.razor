@@ -1,20 +1,39 @@
 ﻿@page "/sgitinerary"
+@using MickeyWebUtility.Interfaces
 @using MickeyWebUtility.Models
+@using MickeyWebUtility.Models.Shared
 @using MickeyWebUtility.Services
-@inject SGItineraryService ItineraryService
+@inject ISGItineraryService ItineraryService
 @inject ILogger<SGItinerary> Logger
-
 <link href="css/Itineraries/Itinerary.css" rel="stylesheet" />
 
 <div class="itinerary-container">
     <h1>Singapore Trip Itinerary</h1>
+
+    <div class="key-selector">
+        <select class="key-dropdown" value="@selectedKey" @onchange="OnKeySelected">
+            <option value="">Select an itinerary...</option>
+            @foreach (var key in availableKeys)
+            {
+                <option value="@key.Key">@key.Description</option>
+            }
+        </select>
+    </div>
+
     @if (errorMessage != null)
     {
         <p class="error">@errorMessage</p>
     }
     else if (itineraryData == null)
     {
-        <p>Loading...</p>
+        @if (!string.IsNullOrEmpty(selectedKey))
+        {
+            <p>Loading...</p>
+        }
+        else
+        {
+            <p>Please select an itinerary to view...</p>
+        }
     }
     else
     {
@@ -56,16 +75,48 @@
 </div>
 
 @code {
+    private List<KeyListItem> availableKeys = new List<KeyListItem>();
+    private string selectedKey = "";
     private Dictionary<string, (string Date, List<Itinerary> Items)> itineraryData;
-    private string activeTab = "day1";
+    private string activeTab;
     private string errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            itineraryData = await ItineraryService.GetSingaporeItinerary();
-            if (itineraryData.Count > 0)
+            availableKeys = await ItineraryService.GetAvailableKeys();
+            Logger.LogInformation($"Loaded {availableKeys.Count} available keys");
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading available keys");
+            errorMessage = "An error occurred while loading the itinerary lists. Please try again later.";
+        }
+    }
+
+    private async Task OnKeySelected(ChangeEventArgs e)
+    {
+        selectedKey = e.Value?.ToString() ?? "";
+        await LoadItineraryData();
+    }
+
+    private async Task LoadItineraryData()
+    {
+        if (string.IsNullOrEmpty(selectedKey))
+        {
+            itineraryData = null;
+            activeTab = null;
+            return;
+        }
+
+        try
+        {
+            errorMessage = null;
+            itineraryData = null; // Reset to show loading spinner
+            itineraryData = await ItineraryService.GetSingaporeItinerary(selectedKey);
+
+            if (itineraryData != null && itineraryData.Count > 0)
             {
                 activeTab = itineraryData.Keys.First();
             }
@@ -74,6 +125,8 @@
         {
             Logger.LogError(ex, "Error fetching itinerary data");
             errorMessage = "An error occurred while fetching the itinerary. Please try again later.";
+            itineraryData = null;
+            activeTab = null;
         }
     }
 

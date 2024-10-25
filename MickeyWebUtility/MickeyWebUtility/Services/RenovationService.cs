@@ -8,8 +8,8 @@ namespace MickeyWebUtility.Services
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<RenovationService> _logger;
-        private readonly string _spreadsheetId = "1OfaP4D5-ts0HK6aJ1IU-puPvk7wH9ckwrtSdpKogZJM";
-        private readonly string _apiKey = "AIzaSyB45KFkcg2vc1St49hoKJ8B9yp_VJpG0AY";
+        private readonly string _spreadsheetId = "";
+        private readonly string _apiKey = "";
         private readonly string _range = "Sheet1!A:K";
 
         public RenovationService(HttpClient httpClient, ILogger<RenovationService> logger)
