@@ -1,0 +1,1535 @@
+﻿@page "/alert"
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Payment Due Alerts</title>
+    <style>
+        :root {
+            --primary-color: #0D6EFD;
+            --secondary-color: #2182FF;
+            --primary-dark: #0050DF;
+            --overdue-color: #DC3545;
+            --due-soon-color: #FFC107;
+            --ok-color: #198754;
+            --background-color: #f8f9fa;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --text-light: #666666;
+            --border-radius: 12px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            flex: 1;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0 0 20px 20px;
+            box-shadow: var(--shadow);
+        }
+
+            header::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+                opacity: 0.4;
+                z-index: 0;
+            }
+
+        h1 {
+            font-size: 2.7rem;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+            position: relative;
+            z-index: 1;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 25px;
+        }
+
+        .date-built {
+            font-size: 1rem;
+            opacity: 0.8;
+            position: relative;
+            z-index: 1;
+            background-color: rgba(255, 255, 255, 0.15);
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 30px;
+            margin-bottom: 5px;
+        }
+
+        .current-time {
+            font-size: 1.5rem;
+            font-weight: 600;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+            margin-top: 10px;
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 5px 15px;
+            border-radius: 30px;
+            display: inline-block;
+        }
+
+        .header-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-box {
+            background-color: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
+            padding: 15px 25px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 180px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .stat-box:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+            }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* CSS-only tabs */
+        .css-tabs {
+            position: relative;
+            margin: 20px;
+        }
+
+        .tab-input {
+            display: none;
+        }
+
+        .nav-menu {
+            background-color: var(--card-color);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            margin-bottom: 25px;
+        }
+
+        .tab-nav {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 0;
+            justify-content: center;
+        }
+
+            .tab-nav li {
+                margin: 0;
+            }
+
+        .tab-label {
+            display: inline-block;
+            padding: 14px 25px;
+            background-color: #f0f0f0;
+            border-radius: 50px;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: var(--transition);
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+            .tab-label:hover {
+                background-color: var(--primary-color);
+                color: white;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+        .tab-content {
+            display: none;
+            margin-bottom: 40px;
+            padding: 10px;
+        }
+
+        /* Show tab content when the corresponding radio button is checked */
+        #tab1:checked ~ #content-overview,
+        #tab2:checked ~ #content-payments,
+        #tab3:checked ~ #content-calendar {
+            display: block;
+        }
+
+        /* Style the active tab */
+        #tab1:checked ~ .nav-menu label[for="tab1"],
+        #tab2:checked ~ .nav-menu label[for="tab2"],
+        #tab3:checked ~ .nav-menu label[for="tab3"] {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .section-title {
+            margin: 35px 0 25px;
+            font-size: 2rem;
+            color: var(--primary-dark);
+            font-weight: 700;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            text-align: center;
+        }
+
+        .section-description {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .payments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .payment-card {
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+            .payment-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+            }
+
+        .payment-header {
+            display: flex;
+            align-items: center;
+            padding: 18px;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #eee;
+        }
+
+        .payment-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            color: white;
+            font-size: 20px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-overdue {
+            background-color: var(--overdue-color);
+        }
+
+        .status-due-today {
+            background-color: var(--overdue-color);
+        }
+
+        .status-due-soon {
+            background-color: var(--due-soon-color);
+        }
+
+        .status-upcoming {
+            background-color: var(--ok-color);
+        }
+
+        .status-ok {
+            background-color: var(--primary-color);
+        }
+
+        .payment-name {
+            font-weight: 700;
+            font-size: 1.25rem;
+            flex-grow: 1;
+            color: var(--primary-dark);
+        }
+
+        .payment-days {
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .days-overdue {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .days-due-today {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .days-due-soon {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .days-upcoming, .days-ok {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .payment-details {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .payment-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            line-height: 1.4;
+        }
+
+        .payment-specs {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+
+        .payment-due-date {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+        }
+
+        .type-badge {
+            display: inline-block;
+            background-color: #f0f0f0;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .overview-card {
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+            .overview-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            }
+
+            .overview-card h3 {
+                color: var(--primary-dark);
+                margin-bottom: 20px;
+                font-size: 1.5rem;
+                display: flex;
+                align-items: center;
+                font-weight: 700;
+            }
+
+                .overview-card h3 span {
+                    margin-right: 12px;
+                    font-size: 1.7rem;
+                }
+
+        .spec-list {
+            list-style: none;
+        }
+
+            .spec-list li {
+                padding: 12px 0;
+                border-bottom: 1px solid #f0f0f0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+                .spec-list li:last-child {
+                    border-bottom: none;
+                }
+
+        .spec-name {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .spec-value {
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .status-count {
+            margin-top: 20px;
+        }
+
+        .status-banner {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px 25px;
+            border-radius: var(--border-radius);
+            margin: 30px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.3rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .description-box {
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-top: 30px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .description-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary-dark);
+            font-size: 1.1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 15px;
+            background-color: #333;
+            color: #f8f9fa;
+            font-size: 0.95rem;
+            margin-top: 40px;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-brand {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .footer-links {
+            margin-top: 15px;
+        }
+
+            .footer-links a {
+                color: #f8f9fa;
+                margin: 0 10px;
+                text-decoration: none;
+                opacity: 0.8;
+                transition: opacity 0.3s ease;
+            }
+
+                .footer-links a:hover {
+                    opacity: 1;
+                }
+
+        /* Calendar styles */
+        .calendar-container {
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .calendar-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-month {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .calendar-weekday {
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-light);
+            padding: 10px;
+        }
+
+        .calendar-day {
+            border-radius: 8px;
+            padding: 10px;
+            min-height: 80px;
+            background-color: #f8f9fa;
+            position: relative;
+            transition: var(--transition);
+        }
+
+            .calendar-day:hover {
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+        .calendar-date {
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .calendar-day.today {
+            border: 2px solid var(--primary-color);
+        }
+
+        .calendar-payments {
+            margin-top: 20px;
+            font-size: 0.85rem;
+        }
+
+        .calendar-payment {
+            margin-bottom: 5px;
+            padding: 5px;
+            border-radius: 4px;
+            background-color: rgba(13, 110, 253, 0.1);
+            color: var(--primary-dark);
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+            .calendar-payment.overdue {
+                background-color: rgba(220, 53, 69, 0.1);
+                color: #721c24;
+            }
+
+            .calendar-payment.due-today {
+                background-color: rgba(220, 53, 69, 0.2);
+                color: #721c24;
+                font-weight: 700;
+            }
+
+            .calendar-payment.due-soon {
+                background-color: rgba(255, 193, 7, 0.2);
+                color: #856404;
+            }
+
+        .controls-bar {
+            background-color: var(--card-color);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        .update-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+
+            .update-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            }
+
+        .update-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+            .update-notification.show {
+                display: flex;
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        .time-block {
+            font-size: 0.85rem;
+            opacity: 0.85;
+            font-weight: normal;
+            margin-left: 5px;
+        }
+
+        .countdown-timer {
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 0.9rem;
+            margin-left: 5px;
+        }
+
+        /* Small screen adjustments without media queries */
+        .small-screen-narrow {
+            width: 100%;
+        }
+
+        /* Mobile adjustments for layout */
+        .header-stats {
+            flex-direction: row;
+        }
+
+        .stat-box {
+            width: auto;
+            max-width: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="payment-tracker">
+        <header>
+            <h1>💰 Monthly Payment Due Alerts</h1>
+            <p class="subtitle">Tracking Monthly Payment Due Dates</p>
+            <p class="date-built">Generated on <span id="generation-date">March 27, 2025</span> | Last updated: <span id="last-updated">Just now</span></p>
+            <p class="current-time" id="current-time">Current Date & Time: Loading...</p>
+            <div class="header-stats">
+                <div class="stat-box">
+                    <div class="stat-value" id="total-payments">3</div>
+                    <div class="stat-label">Total Payments</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="overdue-payments">2</div>
+                    <div class="stat-label">Overdue/Due Today</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="due-soon-payments">1</div>
+                    <div class="stat-label">Due Soon</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="upcoming-payments">0</div>
+                    <div class="stat-label">Upcoming</div>
+                </div>
+            </div>
+        </header>
+        <div class="controls-bar">
+            <button class="update-btn" id="update-btn">🔄 Update Payment Statuses</button>
+            <span id="auto-update-status">Auto-updates every minute</span>
+        </div>
+        <div class="css-tabs">
+            <!-- Radio buttons for tab switching -->
+            <input type="radio" name="tabs" id="tab1" class="tab-input" checked>
+            <input type="radio" name="tabs" id="tab2" class="tab-input">
+            <input type="radio" name="tabs" id="tab3" class="tab-input">
+            <!-- Tab navigation -->
+            <nav class="nav-menu">
+                <ul class="tab-nav">
+                    <li><label for="tab1" class="tab-label">📊 Overview</label></li>
+                    <li><label for="tab2" class="tab-label">💸 Payments</label></li>
+                    <li><label for="tab3" class="tab-label">📅 Calendar</label></li>
+                </ul>
+            </nav>
+            <!-- Overview Tab -->
+            <div id="content-overview" class="tab-content">
+                <h2 class="section-title">Payment Overview</h2>
+                <p class="section-description">A quick summary of your monthly payment due dates and status.</p>
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <h3><span>⚠️</span> Urgent Payments</h3>
+                        <ul class="spec-list" id="urgent-payments-list">
+                            <li class="payment-item" data-due-day="13" data-product="Claude" data-due-time="15:31"><span class="spec-name">Claude <span class="time-block">15:31</span></span> <span class="spec-value payment-status" style="color: #DC3545;">14 days overdue</span></li>
+                            <li class="payment-item" data-due-day="21" data-product="ChatGPT" data-due-time="15:27"><span class="spec-name">ChatGPT <span class="time-block">15:27</span></span> <span class="spec-value payment-status" style="color: #DC3545;">6 days overdue</span></li>
+                            <li class="payment-item" data-due-day="29" data-product="Maxis" data-due-time="15:23"><span class="spec-name">Maxis <span class="time-block">15:23</span></span> <span class="spec-value payment-status" style="color: #FFC107;">2 days until due</span></li>
+                        </ul>
+                    </div>
+                    <div class="overview-card">
+                        <h3><span>📅</span> This Month's Schedule</h3>
+                        <ul class="spec-list" id="monthly-schedule-list">
+                            <li data-day="13">
+                                <span class="spec-name">13 Mar</span> <span class="spec-value">
+                                    Claude <span class="time-block">15:31</span>
+                                </span>
+                            </li>
+                            <li data-day="21">
+                                <span class="spec-name">21 Mar</span> <span class="spec-value">
+                                    ChatGPT <span class="time-block">15:27</span>
+                                </span>
+                            </li>
+                            <li data-day="29">
+                                <span class="spec-name">29 Mar</span> <span class="spec-value">
+                                    Maxis <span class="time-block">15:23</span>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="overview-card">
+                        <h3><span>🔖</span> Payment Categories</h3>
+                        <ul class="spec-list">
+                            <li><span class="spec-name">🤖 AI</span> <span class="spec-value">2 payments</span></li>
+                            <li><span class="spec-name">📱 PhoneBill</span> <span class="spec-value">1 payment</span></li>
+                        </ul>
+                    </div>
+                    <div class="overview-card">
+                        <h3><span>🔍</span> Summary Information</h3>
+                        <p style="margin-bottom: 15px;" id="summary-text">This tracker monitors 3 monthly payments. There are currently 2 overdue or due today and 1 payments due within the next 3 days.</p>
+                        <p style="margin-bottom: 15px;">The most common payment category is AI with 2 payments.</p>
+                        <div class="description-box">
+                            <div class="description-title">💼 Payment Alert Purpose</div>
+                            <p>This document provides a complete view of all your monthly payment due dates. Use it to track bills, subscriptions, and any other recurring payments. Items are color-coded for quick reference: red for overdue or due today, yellow for due soon, and green for upcoming payments.</p>
+                            <p style="margin-top: 10px;"><strong>Auto-update feature:</strong> This page will automatically refresh payment statuses every minute to show the most current due dates and times. You can also click the "Update Payment Statuses" button to refresh instantly.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Payments Tab -->
+            <div id="content-payments" class="tab-content">
+                <h2 class="section-title">Monthly Payments</h2>
+                <p class="section-description">Browse your payments organized by their current status.</p>
+                <div class="status-section" id="status-section-overdue">
+                    <h3 style="margin-top: 30px; color: var(--primary-dark);">⚠️ Overdue (<span class="status-count" id="overdue-count">2</span>)</h3>
+                    <div class="payments-grid" id="overdue-grid">
+                        <div class="payment-card" data-product="Claude" data-due-day="13" data-due-time="15:31" data-details="AI">
+                            <div class="payment-header">
+                                <div class="payment-icon status-overdue">⚠️</div>
+                                <div class="payment-name">Claude</div>
+                                <div class="payment-days days-overdue">14 days overdue</div>
+                            </div>
+                            <div class="payment-details">
+                                <div class="payment-due-date">📅 Due: <span class="next-due-date">Loading...</span> (Day 13)</div>
+                                <div class="payment-specs">
+                                    <span class="type-badge">🤖 AI</span>
+                                </div>
+                                <div class="payment-specs">
+                                    <span class="countdown-timer" id="countdown-claude">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="payment-card" data-product="ChatGPT" data-due-day="21" data-due-time="15:27" data-details="AI">
+                            <div class="payment-header">
+                                <div class="payment-icon status-overdue">⚠️</div>
+                                <div class="payment-name">ChatGPT</div>
+                                <div class="payment-days days-overdue">6 days overdue</div>
+                            </div>
+                            <div class="payment-details">
+                                <div class="payment-due-date">📅 Due: <span class="next-due-date">Loading...</span> (Day 21)</div>
+                                <div class="payment-specs">
+                                    <span class="type-badge">🤖 AI</span>
+                                </div>
+                                <div class="payment-specs">
+                                    <span class="countdown-timer" id="countdown-chatgpt">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="status-section" id="status-section-due-soon">
+                    <h3 style="margin-top: 30px; color: var(--primary-dark);">⏰ Due Soon (<span class="status-count" id="due-soon-count">1</span>)</h3>
+                    <div class="payments-grid" id="due-soon-grid">
+                        <div class="payment-card" data-product="Maxis" data-due-day="29" data-due-time="15:23" data-details="PhoneBill">
+                            <div class="payment-header">
+                                <div class="payment-icon status-due-soon">⏰</div>
+                                <div class="payment-name">Maxis</div>
+                                <div class="payment-days days-due-soon">2 days until due</div>
+                            </div>
+                            <div class="payment-details">
+                                <div class="payment-due-date">📅 Due: <span class="next-due-date">Loading...</span> (Day 29)</div>
+                                <div class="payment-specs">
+                                    <span class="type-badge">📱 PhoneBill</span>
+                                </div>
+                                <div class="payment-specs">
+                                    <span class="countdown-timer" id="countdown-maxis">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="status-banner">
+                    <span>Total Payments</span>
+                    <span id="total-payments-banner">3</span>
+                </div>
+            </div>
+            <!-- Calendar Tab -->
+            <div id="content-calendar" class="tab-content">
+                <h2 class="section-title">Monthly Calendar</h2>
+                <p class="section-description">View your payment schedule in a monthly calendar format.</p>
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <div class="calendar-month">March 2025</div>
+                    </div>
+                    <div class="calendar-grid" id="calendar-grid">
+                        <div class="calendar-weekday">Sun</div>
+                        <div class="calendar-weekday">Mon</div>
+                        <div class="calendar-weekday">Tue</div>
+                        <div class="calendar-weekday">Wed</div>
+                        <div class="calendar-weekday">Thu</div>
+                        <div class="calendar-weekday">Fri</div>
+                        <div class="calendar-weekday">Sat</div>
+                        <div class="calendar-day"></div>
+                        <div class="calendar-day"></div>
+                        <div class="calendar-day"></div>
+                        <div class="calendar-day"></div>
+                        <div class="calendar-day"></div>
+                        <div class="calendar-day"></div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">1</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">2</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">3</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">4</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">5</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">6</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">7</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">8</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">9</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">10</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">11</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">12</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">13</div>
+                            <div class="calendar-payments">
+                                <div class="calendar-payment overdue">Claude</div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">14</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">15</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">16</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">17</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">18</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">19</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">20</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">21</div>
+                            <div class="calendar-payments">
+                                <div class="calendar-payment overdue">ChatGPT</div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">22</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">23</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">24</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">25</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">26</div>
+                        </div>
+                        <div class="calendar-day today">
+                            <div class="calendar-date">27</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">28</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">29</div>
+                            <div class="calendar-payments">
+                                <div class="calendar-payment due-soon">Maxis</div>
+                            </div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">30</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-date">31</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="update-notification" id="update-notification">
+            <span>🔄</span>
+            <span>Payment statuses updated</span>
+        </div>
+        <footer>
+            <div class="footer-content">
+                <div class="footer-brand">Monthly Payment Due Alerts</div>
+                <p>Generated on March 27, 2025 • Total Payments: <span id="footer-total">3</span></p>
+                <p>Overdue/Due Today: <span id="footer-overdue">2</span> • Due Soon: <span id="footer-due-soon">1</span> • Last updated: <span id="footer-updated-time">2025-03-27 18:39</span></p>
+                <div class="footer-links">
+                    <a href="#">Home</a>
+                    <a href="#">Payments</a>
+                    <a href="#">Support</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script>
+        // Payment data (each item has product name, due day, and due time)
+        const payments = [
+            {
+                product: 'Maxis',
+                dueDay: 29,
+                dueTime: '15:23',
+                dueHour: 15,
+                dueMinute: 23,
+                details: 'PhoneBill'
+            },
+            {
+                product: 'Claude',
+                dueDay: 13,
+                dueTime: '15:31',
+                dueHour: 15,
+                dueMinute: 31,
+                details: 'AI'
+            },
+            {
+                product: 'ChatGPT',
+                dueDay: 21,
+                dueTime: '15:27',
+                dueHour: 15,
+                dueMinute: 27,
+                details: 'AI'
+            },
+        ];
+
+        // Elements - will be initialized when DOM is ready
+        let elements;
+
+        // Status constants
+        const STATUS = {
+            OVERDUE: 'Overdue',
+            DUE_TODAY: 'Due Today',
+            DUE_SOON: 'Due Soon',
+            UPCOMING: 'Upcoming',
+            OK: 'OK'
+        };
+
+        // Status classes
+        const STATUS_CLASSES = {
+            [STATUS.OVERDUE]: {
+                icon: 'status-overdue',
+                days: 'days-overdue',
+                emoji: '⚠️',
+                color: '#DC3545'
+            },
+            [STATUS.DUE_TODAY]: {
+                icon: 'status-due-today',
+                days: 'days-due-today',
+                emoji: '🔔',
+                color: '#DC3545'
+            },
+            [STATUS.DUE_SOON]: {
+                icon: 'status-due-soon',
+                days: 'days-due-soon',
+                emoji: '⏰',
+                color: '#FFC107'
+            },
+            [STATUS.UPCOMING]: {
+                icon: 'status-upcoming',
+                days: 'days-upcoming',
+                emoji: '📅',
+                color: '#198754'
+            },
+            [STATUS.OK]: {
+                icon: 'status-ok',
+                days: 'days-ok',
+                emoji: '✅',
+                color: '#0D6EFD'
+            }
+        };
+
+        // Initialize payment tracker
+        function initializePaymentTracker() {
+            console.log('Initializing payment tracker...');
+
+            // Initialize elements
+            elements = {
+                updateBtn: document.getElementById('update-btn'),
+                updateNotification: document.getElementById('update-notification'),
+                currentTime: document.getElementById('current-time'),
+                lastUpdated: document.getElementById('last-updated'),
+                footerUpdatedTime: document.getElementById('footer-updated-time'),
+                totalPayments: document.getElementById('total-payments'),
+                overduePayments: document.getElementById('overdue-payments'),
+                dueSoonPayments: document.getElementById('due-soon-payments'),
+                upcomingPayments: document.getElementById('upcoming-payments'),
+                totalPaymentsBanner: document.getElementById('total-payments-banner'),
+                footerTotal: document.getElementById('footer-total'),
+                footerOverdue: document.getElementById('footer-overdue'),
+                footerDueSoon: document.getElementById('footer-due-soon'),
+                urgentPaymentsList: document.getElementById('urgent-payments-list'),
+                summaryText: document.getElementById('summary-text')
+            };
+
+            // Check if elements were found
+            if (elements.updateBtn) {
+                // Set up event listeners
+                elements.updateBtn.addEventListener('click', updatePaymentStatuses);
+
+                // Auto update every minute
+                setInterval(updatePaymentStatuses, 60 * 1000);
+
+                // Update clock every second
+                setInterval(updateClock, 1000);
+
+                // Initial updates
+                updateClock();
+                updatePaymentStatuses();
+
+                console.log('Payment tracker initialization complete');
+            } else {
+                console.error('Update button not found, check element IDs');
+            }
+        }
+
+        // Initialize as soon as DOM is ready
+        document.addEventListener('DOMContentLoaded', initializePaymentTracker);
+
+        // Update clock
+        function updateClock() {
+            if (!elements || !elements.currentTime) return;
+
+            const now = new Date();
+            elements.currentTime.textContent = `Current Date & Time: ${now.toLocaleString()}`;
+
+            // Update all countdowns
+            payments.forEach(payment => {
+                updateCountdown(payment);
+            });
+        }
+
+        // Update countdown for a payment
+        function updateCountdown(payment) {
+            if (!elements) return;
+
+            const countdownElement = document.getElementById(`countdown-${payment.product.replace(/\s+/g, '-').toLowerCase()}`);
+            if (!countdownElement) return;
+
+            const now = new Date();
+            const dueDate = getNextDueDate(payment.dueDay, payment.dueHour, payment.dueMinute);
+
+            const diffMs = dueDate - now;
+            if (diffMs <= 0) {
+                // Already due
+                countdownElement.textContent = 'Due now';
+                countdownElement.style.color = STATUS_CLASSES[STATUS.OVERDUE].color;
+                return;
+            }
+
+            // Convert to hours, minutes, seconds
+            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            const diffHrs = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+            const diffSecs = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+            // Format countdown
+            let countdown = '';
+            if (diffDays > 0) {
+                countdown += `${diffDays}d `;
+            }
+            countdown += `${diffHrs}h ${diffMins}m ${diffSecs}s`;
+
+            countdownElement.textContent = countdown;
+
+            // Set color based on time remaining
+            if (diffMs < 1000 * 60 * 60 * 3) { // Less than 3 hours
+                countdownElement.style.color = STATUS_CLASSES[STATUS.OVERDUE].color;
+            } else if (diffMs < 1000 * 60 * 60 * 24) { // Less than 1 day
+                countdownElement.style.color = STATUS_CLASSES[STATUS.DUE_TODAY].color;
+            } else if (diffMs < 1000 * 60 * 60 * 24 * 3) { // Less than 3 days
+                countdownElement.style.color = STATUS_CLASSES[STATUS.DUE_SOON].color;
+            } else {
+                countdownElement.style.color = STATUS_CLASSES[STATUS.OK].color;
+            }
+        }
+
+        // Update all payment statuses
+        function updatePaymentStatuses() {
+            if (!elements) return;
+
+            const now = new Date();
+
+            let overdueCount = 0;
+            let dueSoonCount = 0;
+            let upcomingCount = 0;
+
+            // Clear urgent payments list
+            if (elements.urgentPaymentsList) {
+                elements.urgentPaymentsList.innerHTML = '';
+            }
+
+            // Process each payment
+            payments.forEach(payment => {
+                // Calculate status with time
+                const statusInfo = calculatePaymentStatus(payment.dueDay, payment.dueHour, payment.dueMinute);
+
+                // Update any elements with this payment's data
+                updatePaymentElements(payment, statusInfo);
+
+                // Count by status
+                if (statusInfo.status === STATUS.OVERDUE || statusInfo.status === STATUS.DUE_TODAY) {
+                    overdueCount++;
+
+                    // Add to urgent payments list
+                    addToUrgentList(payment, statusInfo);
+                } else if (statusInfo.status === STATUS.DUE_SOON) {
+                    dueSoonCount++;
+
+                    // Add to urgent payments list
+                    addToUrgentList(payment, statusInfo);
+                } else {
+                    upcomingCount++;
+                }
+            });
+
+            // If no urgent payments, show 'all caught up' message
+            if (elements.urgentPaymentsList && overdueCount === 0 && dueSoonCount === 0) {
+                elements.urgentPaymentsList.innerHTML = `<li id='no-urgent-payments'><span class='spec-name'>All caught up!</span> <span class='spec-value' style='color: #198754;'>No urgent payments</span></li>`;
+            }
+
+            // Update counts
+            if (elements.totalPayments) elements.totalPayments.textContent = payments.length;
+            if (elements.overduePayments) elements.overduePayments.textContent = overdueCount;
+            if (elements.dueSoonPayments) elements.dueSoonPayments.textContent = dueSoonCount;
+            if (elements.upcomingPayments) elements.upcomingPayments.textContent = upcomingCount;
+            if (elements.totalPaymentsBanner) elements.totalPaymentsBanner.textContent = payments.length;
+            if (elements.footerTotal) elements.footerTotal.textContent = payments.length;
+            if (elements.footerOverdue) elements.footerOverdue.textContent = overdueCount;
+            if (elements.footerDueSoon) elements.footerDueSoon.textContent = dueSoonCount;
+
+            // Update status sections counts
+            updateStatusSectionCounts();
+
+            // Update summary text
+            if (elements.summaryText) {
+                elements.summaryText.textContent = `This tracker monitors ${payments.length} monthly payments. There are currently ${overdueCount} overdue or due today and ${dueSoonCount} payments due within the next 3 days.`;
+            }
+
+            // Update timestamps
+            const formattedDate = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            const formattedTime = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+            if (elements.lastUpdated) elements.lastUpdated.textContent = formattedDate;
+            if (elements.footerUpdatedTime) elements.footerUpdatedTime.textContent = formattedTime;
+
+            // Show notification
+            showUpdateNotification();
+        }
+
+        // Add payment to urgent list
+        function addToUrgentList(payment, statusInfo) {
+            if (!elements || !elements.urgentPaymentsList) return;
+
+            const li = document.createElement('li');
+            li.className = 'payment-item';
+            li.setAttribute('data-due-day', payment.dueDay);
+            li.setAttribute('data-product', payment.product);
+            li.setAttribute('data-due-time', payment.dueTime);
+
+            const color = statusInfo.status === STATUS.OVERDUE || statusInfo.status === STATUS.DUE_TODAY ?
+                STATUS_CLASSES[STATUS.OVERDUE].color : STATUS_CLASSES[STATUS.DUE_SOON].color;
+
+            li.innerHTML = `<span class='spec-name'>${payment.product}</span> <span class='spec-value payment-status' style='color: ${color};'>${statusInfo.daysText}</span>`;
+
+            elements.urgentPaymentsList.appendChild(li);
+        }
+
+        // Update all elements for a specific payment
+        function updatePaymentElements(payment, statusInfo) {
+            // Find all payment cards for this product
+            const cards = document.querySelectorAll(`.payment-card[data-product='${payment.product}']`);
+
+            cards.forEach(card => {
+                // Update icon
+                const iconElement = card.querySelector('.payment-icon');
+                if (iconElement) {
+                    iconElement.className = `payment-icon ${STATUS_CLASSES[statusInfo.status].icon}`;
+                    iconElement.textContent = STATUS_CLASSES[statusInfo.status].emoji;
+                }
+
+                // Update days text
+                const daysElement = card.querySelector('.payment-days');
+                if (daysElement) {
+                    daysElement.className = `payment-days ${STATUS_CLASSES[statusInfo.status].days}`;
+                    daysElement.textContent = statusInfo.daysText;
+                }
+
+                // Update due date
+                const dueDateElement = card.querySelector('.next-due-date');
+                if (dueDateElement) {
+                    dueDateElement.textContent = statusInfo.nextDueDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+                }
+
+                // Move card to appropriate section
+                moveCardToSection(card, statusInfo.status);
+            });
+
+            // Update any status text for this payment in other places
+            const statusElements = document.querySelectorAll(`.payment-item[data-product='${payment.product}'] .payment-status`);
+            statusElements.forEach(element => {
+                element.textContent = statusInfo.daysText;
+            });
+        }
+
+        // Move payment card to the correct status section
+        function moveCardToSection(card, newStatus) {
+            const targetGrid = document.getElementById(`${newStatus.toLowerCase().replace(' ', '-')}-grid`);
+            const targetSection = document.getElementById(`status-section-${newStatus.toLowerCase().replace(' ', '-')}`);
+
+            // If target section doesn't exist yet, create it
+            if (!targetSection && targetGrid) {
+                const statusEmoji = STATUS_CLASSES[newStatus].emoji;
+
+                const section = document.createElement('div');
+                section.className = 'status-section';
+                section.id = `status-section-${newStatus.toLowerCase().replace(' ', '-')}`;
+
+                section.innerHTML = `
+                    <h3 style='margin-top: 30px; color: var(--primary-dark);'>${statusEmoji} ${newStatus} (<span class='status-count' id='${newStatus.toLowerCase().replace(' ', '-')}-count'>1</span>)</h3>
+                    <div class='payments-grid' id='${newStatus.toLowerCase().replace(' ', '-')}-grid'></div>
+                `;
+
+                // Add before the status banner
+                const statusBanner = document.querySelector('.status-banner');
+                if (statusBanner) {
+                    statusBanner.parentNode.insertBefore(section, statusBanner);
+                } else {
+                    document.getElementById('content-payments').appendChild(section);
+                }
+            }
+
+            // If target grid exists, move the card
+            if (targetGrid) {
+                targetGrid.appendChild(card);
+            }
+        }
+
+        // Update the counts for each status section
+        function updateStatusSectionCounts() {
+            const statuses = ['overdue', 'due-today', 'due-soon', 'upcoming', 'ok'];
+
+            statuses.forEach(status => {
+                const countElement = document.getElementById(`${status}-count`);
+                const grid = document.getElementById(`${status}-grid`);
+
+                if (countElement && grid) {
+                    const count = grid.children.length;
+                    countElement.textContent = count;
+
+                    // Hide section if empty
+                    const section = document.getElementById(`status-section-${status}`);
+                    if (section) {
+                        section.style.display = count > 0 ? 'block' : 'none';
+                    }
+                }
+            });
+        }
+
+        // Get next due date for a payment with time
+        function getNextDueDate(dueDay, dueHour, dueMinute) {
+            const now = new Date();
+            const currentDay = now.getDate();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+
+            // Create due date for this month with time
+            let thisMonthDue = new Date(currentYear, currentMonth, dueDay, dueHour, dueMinute, 0);
+
+            // Check if date is invalid (e.g., Feb 30th)
+            if (thisMonthDue.getDate() !== dueDay) {
+                // Use last day of month instead
+                thisMonthDue = new Date(currentYear, currentMonth + 1, 0, dueHour, dueMinute, 0);
+            }
+
+            // If this month's due date has already passed, get next month's due date
+            if (now > thisMonthDue) {
+                // Calculate next month's due date
+                let nextMonth = currentMonth + 1;
+                let nextYear = currentYear;
+
+                if (nextMonth > 11) {
+                    nextMonth = 0;
+                    nextYear++;
+                }
+
+                let nextMonthDue = new Date(nextYear, nextMonth, dueDay, dueHour, dueMinute, 0);
+
+                // Check if date is invalid in next month
+                if (nextMonthDue.getDate() !== dueDay) {
+                    // Use last day of next month
+                    nextMonthDue = new Date(nextYear, nextMonth + 1, 0, dueHour, dueMinute, 0);
+                }
+
+                return nextMonthDue;
+            }
+
+            return thisMonthDue;
+        }
+
+        // Calculate payment status based on due date and time
+        function calculatePaymentStatus(dueDay, dueHour, dueMinute) {
+            const now = new Date();
+
+            // Get next due date (either this month or next month)
+            const nextDueDate = getNextDueDate(dueDay, dueHour, dueMinute);
+
+            // Calculate time difference in milliseconds
+            const diffMs = nextDueDate - now;
+            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+
+            let status, daysText, isOverdue;
+
+            // If due date is in the past
+            if (diffMs < 0) {
+                // Calculate how overdue in days, hours, minutes
+                const overdueDays = Math.floor(Math.abs(diffMs) / (1000 * 60 * 60 * 24));
+                const overdueHours = Math.floor((Math.abs(diffMs) % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const overdueMinutes = Math.floor((Math.abs(diffMs) % (1000 * 60 * 60)) / (1000 * 60));
+
+                status = STATUS.OVERDUE;
+                isOverdue = true;
+
+                if (overdueDays > 0) {
+                    daysText = `${overdueDays} ${overdueDays === 1 ? 'day' : 'days'} ${overdueHours}h overdue`;
+                } else if (overdueHours > 0) {
+                    daysText = `${overdueHours}h ${overdueMinutes}m overdue`;
+                } else {
+                    daysText = `${overdueMinutes}m overdue`;
+                }
+            }
+            // Due today
+            else if (diffDays === 0 && diffHours < 12) {
+                status = STATUS.DUE_TODAY;
+                isOverdue = false;
+
+                if (diffHours === 0 && diffMinutes < 5) {
+                    daysText = 'Due now';
+                } else if (diffHours === 0) {
+                    daysText = `Due in ${diffMinutes}m`;
+                } else {
+                    daysText = `Due in ${diffHours}h ${diffMinutes}m`;
+                }
+            }
+            // Due soon (within 3 days)
+            else if (diffDays < 3) {
+                status = STATUS.DUE_SOON;
+                isOverdue = false;
+
+                if (diffDays === 0) {
+                    daysText = `Due in ${diffHours}h ${diffMinutes}m`;
+                } else {
+                    daysText = `${diffDays} ${diffDays === 1 ? 'day' : 'days'} ${diffHours}h until due`;
+                }
+            }
+            // Upcoming (within a week)
+            else if (diffDays < 7) {
+                status = STATUS.UPCOMING;
+                isOverdue = false;
+                daysText = `${diffDays} ${diffDays === 1 ? 'day' : 'days'} until due`;
+            }
+            // OK (more than a week away)
+            else {
+                status = STATUS.OK;
+                isOverdue = false;
+                daysText = `${diffDays} ${diffDays === 1 ? 'day' : 'days'} until due`;
+            }
+
+            return {
+                status,
+                daysRemaining: diffDays,
+                hoursRemaining: diffHours,
+                minutesRemaining: diffMinutes,
+                nextDueDate,
+                daysText,
+                isOverdue
+            };
+        }
+
+        // Show update notification - without keyframes animation
+        function showUpdateNotification() {
+            if (!elements || !elements.updateNotification) return;
+
+            // Show the notification
+            elements.updateNotification.classList.add('show');
+
+            // Hide the notification after 3 seconds
+            setTimeout(() => {
+                // First make it fade out with opacity transition
+                elements.updateNotification.style.opacity = '0';
+                elements.updateNotification.style.transform = 'translateY(-20px)';
+
+                // After transition completes, remove the show class
+                setTimeout(() => {
+                    elements.updateNotification.classList.remove('show');
+                    // Reset styles for next showing
+                    elements.updateNotification.style.opacity = '';
+                    elements.updateNotification.style.transform = '';
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
+
+
+
+@code {
+    [Inject]
+    protected IJSRuntime JSRuntime { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                // Manually call the initialization function after Blazor has rendered
+                await JSRuntime.InvokeVoidAsync("initializePaymentTracker");
+                Console.WriteLine("Payment tracker initialized successfully");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error initializing payment tracker: {ex.Message}");
+            }
+        }
+    }
+}
