@@ -18,9 +18,20 @@
             --card-color: #ffffff;
             --text-color: #333333;
             --text-light: #666666;
-            --border-radius: 12px;
+            --border-radius: min(12px, 3vw);
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             --transition: all 0.3s ease;
+            --spacing-xs: clamp(0.25rem, 1vw, 0.5rem);
+            --spacing-sm: clamp(0.5rem, 2vw, 0.75rem);
+            --spacing-md: clamp(1rem, 3vw, 1.5rem);
+            --spacing-lg: clamp(1.5rem, 4vw, 2.5rem);
+            --spacing-xl: clamp(2rem, 5vw, 3rem);
+            --font-xs: clamp(0.7rem, 2vw, 0.9rem);
+            --font-sm: clamp(0.85rem, 2.5vw, 1rem);
+            --font-md: clamp(1rem, 3vw, 1.2rem);
+            --font-lg: clamp(1.2rem, 4vw, 1.5rem);
+            --font-xl: clamp(1.5rem, 5vw, 2rem);
+            --font-xxl: clamp(1.8rem, 6vw, 2.7rem);
         }
 
         * {
@@ -39,10 +50,11 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            font-size: var(--font-md);
         }
 
         .container {
-            max-width: 100%;
+            width: 100%;
             margin: 0 auto;
             flex: 1;
         }
@@ -51,10 +63,10 @@
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
             text-align: center;
-            padding: 40px 20px;
+            padding: var(--spacing-lg) var(--spacing-md);
             position: relative;
             overflow: hidden;
-            border-radius: 0 0 20px 20px;
+            border-radius: 0 0 clamp(10px, 5vw, 20px) clamp(10px, 5vw, 20px);
             box-shadow: var(--shadow);
         }
 
@@ -71,8 +83,8 @@
             }
 
         h1 {
-            font-size: 2.7rem;
-            margin-bottom: 8px;
+            font-size: var(--font-xxl);
+            margin-bottom: var(--spacing-xs);
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
             position: relative;
             z-index: 1;
@@ -80,34 +92,34 @@
         }
 
         .subtitle {
-            font-size: 1.3rem;
+            font-size: var(--font-lg);
             opacity: 0.9;
             position: relative;
             z-index: 1;
-            margin-bottom: 25px;
+            margin-bottom: var(--spacing-md);
         }
 
         .date-built {
-            font-size: 1rem;
+            font-size: var(--font-sm);
             opacity: 0.8;
             position: relative;
             z-index: 1;
             background-color: rgba(255, 255, 255, 0.15);
             display: inline-block;
-            padding: 5px 15px;
+            padding: var(--spacing-xs) var(--spacing-sm);
             border-radius: 30px;
-            margin-bottom: 5px;
+            margin-bottom: var(--spacing-xs);
         }
 
         .current-time {
-            font-size: 1.5rem;
+            font-size: var(--font-md);
             font-weight: 600;
             opacity: 0.9;
             position: relative;
             z-index: 1;
-            margin-top: 10px;
+            margin-top: var(--spacing-sm);
             background-color: rgba(255, 255, 255, 0.15);
-            padding: 5px 15px;
+            padding: var(--spacing-xs) var(--spacing-md);
             border-radius: 30px;
             display: inline-block;
         }
@@ -115,9 +127,9 @@
         .header-stats {
             display: flex;
             justify-content: center;
-            gap: 30px;
             flex-wrap: wrap;
-            margin-top: 30px;
+            gap: clamp(10px, 3vw, 30px);
+            margin-top: var(--spacing-lg);
             position: relative;
             z-index: 1;
         }
@@ -125,12 +137,14 @@
         .stat-box {
             background-color: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(5px);
-            padding: 15px 25px;
-            border-radius: 12px;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius);
             text-align: center;
-            min-width: 180px;
+            min-width: clamp(100px, 25vw, 180px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            flex: 1 1 calc(25% - clamp(10px, 3vw, 30px));
+            min-width: 0;
         }
 
             .stat-box:hover {
@@ -139,20 +153,20 @@
             }
 
         .stat-value {
-            font-size: 1.5rem;
+            font-size: var(--font-lg);
             font-weight: 700;
-            margin-bottom: 5px;
+            margin-bottom: var(--spacing-xs);
         }
 
         .stat-label {
-            font-size: 0.9rem;
+            font-size: var(--font-xs);
             opacity: 0.9;
         }
 
         /* CSS-only tabs */
         .css-tabs {
             position: relative;
-            margin: 20px;
+            margin: var(--spacing-md);
         }
 
         .tab-input {
@@ -161,41 +175,45 @@
 
         .nav-menu {
             background-color: var(--card-color);
-            padding: 20px;
+            padding: var(--spacing-md);
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             position: -webkit-sticky;
             position: sticky;
             top: 0;
             z-index: 100;
-            margin-bottom: 25px;
+            margin-bottom: var(--spacing-md);
         }
 
         .tab-nav {
             list-style: none;
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: clamp(8px, 2vw, 12px);
             margin-bottom: 0;
             justify-content: center;
         }
 
             .tab-nav li {
                 margin: 0;
+                flex: 1 1 auto;
             }
 
         .tab-label {
-            display: inline-block;
-            padding: 14px 25px;
+            display: block;
+            width: 100%;
+            padding: clamp(8px, 2vw, 14px) clamp(10px, 3vw, 25px);
             background-color: #f0f0f0;
             border-radius: 50px;
             text-decoration: none;
             color: var(--text-color);
             font-weight: 600;
-            font-size: 1.05rem;
+            font-size: var(--font-sm);
             transition: var(--transition);
             cursor: pointer;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            white-space: nowrap;
         }
 
             .tab-label:hover {
@@ -206,8 +224,8 @@
 
         .tab-content {
             display: none;
-            margin-bottom: 40px;
-            padding: 10px;
+            margin-bottom: var(--spacing-xl);
+            padding: var(--spacing-sm);
         }
 
         /* Show tab content when the corresponding radio button is checked */
@@ -227,11 +245,11 @@
         }
 
         .section-title {
-            margin: 35px 0 25px;
-            font-size: 2rem;
+            margin: var(--spacing-lg) 0 var(--spacing-md);
+            font-size: var(--font-xl);
             color: var(--primary-dark);
             font-weight: 700;
-            padding-bottom: 15px;
+            padding-bottom: var(--spacing-sm);
             border-bottom: 2px solid #f0f0f0;
             text-align: center;
         }
@@ -239,16 +257,17 @@
         .section-description {
             text-align: center;
             max-width: 800px;
-            margin: 0 auto 30px;
+            margin: 0 auto var(--spacing-lg);
             color: var(--text-light);
-            font-size: 1.1rem;
+            font-size: var(--font-sm);
+            padding: 0 var(--spacing-sm);
         }
 
         .payments-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
         }
 
         .payment-card {
@@ -271,21 +290,21 @@
         .payment-header {
             display: flex;
             align-items: center;
-            padding: 18px;
+            padding: var(--spacing-sm);
             background-color: #f9f9f9;
             border-bottom: 1px solid #eee;
         }
 
         .payment-icon {
-            width: 48px;
-            height: 48px;
+            width: clamp(36px, 10vw, 48px);
+            height: clamp(36px, 10vw, 48px);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-right: 15px;
+            margin-right: var(--spacing-sm);
             color: white;
-            font-size: 20px;
+            font-size: clamp(16px, 4vw, 20px);
             flex-shrink: 0;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
@@ -312,18 +331,20 @@
 
         .payment-name {
             font-weight: 700;
-            font-size: 1.25rem;
+            font-size: var(--font-md);
             flex-grow: 1;
             color: var(--primary-dark);
+            word-break: break-word;
         }
 
         .payment-days {
-            padding: 6px 14px;
+            padding: var(--spacing-xs) var(--spacing-sm);
             border-radius: 50px;
-            font-size: 1rem;
+            font-size: var(--font-xs);
             font-weight: 700;
             flex-shrink: 0;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-left: var(--spacing-xs);
         }
 
         .days-overdue {
@@ -347,31 +368,31 @@
         }
 
         .payment-details {
-            padding: 25px;
+            padding: var(--spacing-md);
             flex-grow: 1;
             display: flex;
             flex-direction: column;
         }
 
         .payment-title {
-            font-size: 1.15rem;
+            font-size: var(--font-md);
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-bottom: var(--spacing-sm);
             color: var(--primary-color);
             line-height: 1.4;
         }
 
         .payment-specs {
-            margin-bottom: 15px;
+            margin-bottom: var(--spacing-sm);
             line-height: 1.6;
             flex-grow: 1;
         }
 
         .payment-due-date {
-            font-size: 1.1rem;
+            font-size: var(--font-sm);
             font-weight: 600;
             color: var(--primary-dark);
-            margin-bottom: 15px;
+            margin-bottom: var(--spacing-sm);
         }
 
         .type-badge {
@@ -379,7 +400,7 @@
             background-color: #f0f0f0;
             padding: 5px 12px;
             border-radius: 20px;
-            font-size: 0.9rem;
+            font-size: var(--font-xs);
             margin-right: 5px;
             margin-bottom: 5px;
             color: var(--text-color);
@@ -387,15 +408,15 @@
 
         .overview-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 25px;
-            margin: 30px 0;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
+            gap: var(--spacing-md);
+            margin: var(--spacing-lg) 0;
         }
 
         .overview-card {
             background-color: var(--card-color);
             border-radius: var(--border-radius);
-            padding: 30px;
+            padding: var(--spacing-lg);
             box-shadow: var(--shadow);
             transition: var(--transition);
         }
@@ -407,16 +428,16 @@
 
             .overview-card h3 {
                 color: var(--primary-dark);
-                margin-bottom: 20px;
-                font-size: 1.5rem;
+                margin-bottom: var(--spacing-md);
+                font-size: var(--font-lg);
                 display: flex;
                 align-items: center;
                 font-weight: 700;
             }
 
                 .overview-card h3 span {
-                    margin-right: 12px;
-                    font-size: 1.7rem;
+                    margin-right: var(--spacing-sm);
+                    font-size: calc(var(--font-lg) * 1.1);
                 }
 
         .spec-list {
@@ -424,11 +445,13 @@
         }
 
             .spec-list li {
-                padding: 12px 0;
+                padding: var(--spacing-sm) 0;
                 border-bottom: 1px solid #f0f0f0;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
+                flex-wrap: wrap;
+                gap: var(--spacing-xs);
             }
 
                 .spec-list li:last-child {
@@ -438,53 +461,59 @@
         .spec-name {
             color: var(--text-light);
             font-weight: 500;
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .spec-value {
             font-weight: 600;
             color: var(--primary-dark);
+            text-align: right;
+            white-space: nowrap;
         }
 
         .status-count {
-            margin-top: 20px;
+            margin-top: var(--spacing-md);
         }
 
         .status-banner {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            padding: 20px 25px;
+            padding: var(--spacing-md);
             border-radius: var(--border-radius);
-            margin: 30px 0;
+            margin: var(--spacing-lg) 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-weight: 700;
-            font-size: 1.3rem;
+            font-size: var(--font-md);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .description-box {
             background-color: #f8f9fa;
             border-radius: var(--border-radius);
-            padding: 20px;
-            margin-top: 30px;
+            padding: var(--spacing-md);
+            margin-top: var(--spacing-lg);
             border-left: 4px solid var(--primary-color);
         }
 
         .description-title {
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: var(--spacing-sm);
             color: var(--primary-dark);
-            font-size: 1.1rem;
+            font-size: var(--font-md);
         }
 
         footer {
             text-align: center;
-            padding: 30px 15px;
+            padding: var(--spacing-lg) var(--spacing-sm);
             background-color: #333;
             color: #f8f9fa;
-            font-size: 0.95rem;
-            margin-top: 40px;
+            font-size: var(--font-xs);
+            margin-top: var(--spacing-xl);
         }
 
         .footer-content {
@@ -494,18 +523,18 @@
 
         .footer-brand {
             font-weight: 700;
-            font-size: 1.2rem;
-            margin-bottom: 10px;
+            font-size: var(--font-md);
+            margin-bottom: var(--spacing-sm);
             color: white;
         }
 
         .footer-links {
-            margin-top: 15px;
+            margin-top: var(--spacing-sm);
         }
 
             .footer-links a {
                 color: #f8f9fa;
-                margin: 0 10px;
+                margin: 0 var(--spacing-sm);
                 text-decoration: none;
                 opacity: 0.8;
                 transition: opacity 0.3s ease;
@@ -519,43 +548,47 @@
         .calendar-container {
             background-color: var(--card-color);
             border-radius: var(--border-radius);
-            padding: 25px;
+            padding: var(--spacing-md);
             box-shadow: var(--shadow);
-            margin-bottom: 30px;
+            margin-bottom: var(--spacing-lg);
+            overflow-x: auto;
         }
 
         .calendar-header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: var(--spacing-md);
         }
 
         .calendar-month {
-            font-size: 1.8rem;
+            font-size: var(--font-lg);
             font-weight: 700;
             color: var(--primary-dark);
         }
 
         .calendar-grid {
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 10px;
-            margin-top: 10px;
+            grid-template-columns: repeat(7, minmax(min(40px, 14vw), 1fr));
+            gap: min(10px, 1vw);
+            margin-top: var(--spacing-sm);
+            min-width: 280px;
         }
 
         .calendar-weekday {
             text-align: center;
             font-weight: 600;
             color: var(--text-light);
-            padding: 10px;
+            padding: var(--spacing-xs);
+            font-size: var(--font-xs);
         }
 
         .calendar-day {
             border-radius: 8px;
-            padding: 10px;
-            min-height: 80px;
+            padding: var(--spacing-xs);
+            min-height: 60px;
             background-color: #f8f9fa;
             position: relative;
             transition: var(--transition);
+            font-size: var(--font-xs);
         }
 
             .calendar-day:hover {
@@ -564,9 +597,9 @@
 
         .calendar-date {
             position: absolute;
-            top: 5px;
-            right: 8px;
-            font-size: 0.9rem;
+            top: 2px;
+            right: 5px;
+            font-size: calc(var(--font-xs) * 0.9);
             color: var(--text-light);
         }
 
@@ -575,13 +608,13 @@
         }
 
         .calendar-payments {
-            margin-top: 20px;
-            font-size: 0.85rem;
+            margin-top: 18px;
+            font-size: calc(var(--font-xs) * 0.85);
         }
 
         .calendar-payment {
-            margin-bottom: 5px;
-            padding: 5px;
+            margin-bottom: 3px;
+            padding: 3px;
             border-radius: 4px;
             background-color: rgba(13, 110, 253, 0.1);
             color: var(--primary-dark);
@@ -609,14 +642,15 @@
 
         .controls-bar {
             background-color: var(--card-color);
-            padding: 15px;
+            padding: var(--spacing-sm);
             border-radius: var(--border-radius);
-            margin-bottom: 20px;
+            margin-bottom: var(--spacing-md);
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: var(--spacing-sm);
             box-shadow: var(--shadow);
+            align-items: center;
         }
 
         .update-btn {
@@ -624,7 +658,7 @@
             color: white;
             border: none;
             border-radius: 50px;
-            padding: 8px 20px;
+            padding: var(--spacing-xs) var(--spacing-md);
             font-weight: 600;
             cursor: pointer;
             display: flex;
@@ -632,6 +666,7 @@
             gap: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             transition: all 0.2s ease;
+            font-size: var(--font-xs);
         }
 
             .update-btn:hover {
@@ -645,7 +680,7 @@
             right: 20px;
             background-color: #28a745;
             color: white;
-            padding: 12px 24px;
+            padding: var(--spacing-sm) var(--spacing-md);
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             display: none;
@@ -663,7 +698,7 @@
             }
 
         .time-block {
-            font-size: 0.85rem;
+            font-size: calc(var(--font-xs) * 0.9);
             opacity: 0.85;
             font-weight: normal;
             margin-left: 5px;
@@ -673,23 +708,14 @@
             background-color: rgba(0, 0, 0, 0.1);
             border-radius: 4px;
             padding: 2px 6px;
-            font-size: 0.9rem;
-            margin-left: 5px;
+            font-size: calc(var(--font-xs) * 0.95);
+            margin-top: var(--spacing-xs);
+            display: inline-block;
         }
 
         /* Small screen adjustments without media queries */
-        .small-screen-narrow {
-            width: 100%;
-        }
-
-        /* Mobile adjustments for layout */
-        .header-stats {
-            flex-direction: row;
-        }
-
-        .stat-box {
-            width: auto;
-            max-width: none;
+        #auto-update-status {
+            font-size: var(--font-xs);
         }
     </style>
 </head>
@@ -698,7 +724,7 @@
         <header>
             <h1>💰 Monthly Payment Due Alerts</h1>
             <p class="subtitle">Tracking Monthly Payment Due Dates</p>
-            <p class="date-built">Generated on <span id="generation-date">March 27, 2025</span> | Last updated: <span id="last-updated">Just now</span></p>
+            <p class="date-built">Generated on <span id="generation-date">March 28, 2025</span> | Last updated: <span id="last-updated">Just now</span></p>
             <p class="current-time" id="current-time">Current Date & Time: Loading...</p>
             <div class="header-stats">
                 <div class="stat-box">
@@ -744,9 +770,9 @@
                     <div class="overview-card">
                         <h3><span>⚠️</span> Urgent Payments</h3>
                         <ul class="spec-list" id="urgent-payments-list">
-                            <li class="payment-item" data-due-day="13" data-product="Claude" data-due-time="15:31"><span class="spec-name">Claude <span class="time-block">15:31</span></span> <span class="spec-value payment-status" style="color: #DC3545;">14 days overdue</span></li>
-                            <li class="payment-item" data-due-day="21" data-product="ChatGPT" data-due-time="15:27"><span class="spec-name">ChatGPT <span class="time-block">15:27</span></span> <span class="spec-value payment-status" style="color: #DC3545;">6 days overdue</span></li>
-                            <li class="payment-item" data-due-day="29" data-product="Maxis" data-due-time="15:23"><span class="spec-name">Maxis <span class="time-block">15:23</span></span> <span class="spec-value payment-status" style="color: #FFC107;">2 days until due</span></li>
+                            <li class="payment-item" data-due-day="13" data-product="Claude" data-due-time="15:31"><span class="spec-name">Claude</span> <span class="spec-value payment-status" style="color: #DC3545;">15 days overdue</span></li>
+                            <li class="payment-item" data-due-day="21" data-product="ChatGPT" data-due-time="15:27"><span class="spec-name">ChatGPT</span> <span class="spec-value payment-status" style="color: #DC3545;">7 days overdue</span></li>
+                            <li class="payment-item" data-due-day="29" data-product="Maxis" data-due-time="15:23"><span class="spec-name">Maxis</span> <span class="spec-value payment-status" style="color: #FFC107;">1 day until due</span></li>
                         </ul>
                     </div>
                     <div class="overview-card">
@@ -754,17 +780,17 @@
                         <ul class="spec-list" id="monthly-schedule-list">
                             <li data-day="13">
                                 <span class="spec-name">13 Mar</span> <span class="spec-value">
-                                    Claude <span class="time-block">15:31</span>
+                                    Claude
                                 </span>
                             </li>
                             <li data-day="21">
                                 <span class="spec-name">21 Mar</span> <span class="spec-value">
-                                    ChatGPT <span class="time-block">15:27</span>
+                                    ChatGPT
                                 </span>
                             </li>
                             <li data-day="29">
                                 <span class="spec-name">29 Mar</span> <span class="spec-value">
-                                    Maxis <span class="time-block">15:23</span>
+                                    Maxis
                                 </span>
                             </li>
                         </ul>
@@ -778,8 +804,8 @@
                     </div>
                     <div class="overview-card">
                         <h3><span>🔍</span> Summary Information</h3>
-                        <p style="margin-bottom: 15px;" id="summary-text">This tracker monitors 3 monthly payments. There are currently 2 overdue or due today and 1 payments due within the next 3 days.</p>
-                        <p style="margin-bottom: 15px;">The most common payment category is AI with 2 payments.</p>
+                        <p style="margin-bottom: var(--spacing-sm);" id="summary-text">This tracker monitors 3 monthly payments. There are currently 2 overdue or due today and 1 payments due within the next 3 days.</p>
+                        <p style="margin-bottom: var(--spacing-sm);">The most common payment category is AI with 2 payments.</p>
                         <div class="description-box">
                             <div class="description-title">💼 Payment Alert Purpose</div>
                             <p>This document provides a complete view of all your monthly payment due dates. Use it to track bills, subscriptions, and any other recurring payments. Items are color-coded for quick reference: red for overdue or due today, yellow for due soon, and green for upcoming payments.</p>
@@ -793,13 +819,13 @@
                 <h2 class="section-title">Monthly Payments</h2>
                 <p class="section-description">Browse your payments organized by their current status.</p>
                 <div class="status-section" id="status-section-overdue">
-                    <h3 style="margin-top: 30px; color: var(--primary-dark);">⚠️ Overdue (<span class="status-count" id="overdue-count">2</span>)</h3>
+                    <h3 style="margin-top: var(--spacing-lg); color: var(--primary-dark);">⚠️ Overdue (<span class="status-count" id="overdue-count">2</span>)</h3>
                     <div class="payments-grid" id="overdue-grid">
                         <div class="payment-card" data-product="Claude" data-due-day="13" data-due-time="15:31" data-details="AI">
                             <div class="payment-header">
                                 <div class="payment-icon status-overdue">⚠️</div>
                                 <div class="payment-name">Claude</div>
-                                <div class="payment-days days-overdue">14 days overdue</div>
+                                <div class="payment-days days-overdue">15 days overdue</div>
                             </div>
                             <div class="payment-details">
                                 <div class="payment-due-date">📅 Due: <span class="next-due-date">Loading...</span> (Day 13)</div>
@@ -815,7 +841,7 @@
                             <div class="payment-header">
                                 <div class="payment-icon status-overdue">⚠️</div>
                                 <div class="payment-name">ChatGPT</div>
-                                <div class="payment-days days-overdue">6 days overdue</div>
+                                <div class="payment-days days-overdue">7 days overdue</div>
                             </div>
                             <div class="payment-details">
                                 <div class="payment-due-date">📅 Due: <span class="next-due-date">Loading...</span> (Day 21)</div>
@@ -830,13 +856,13 @@
                     </div>
                 </div>
                 <div class="status-section" id="status-section-due-soon">
-                    <h3 style="margin-top: 30px; color: var(--primary-dark);">⏰ Due Soon (<span class="status-count" id="due-soon-count">1</span>)</h3>
+                    <h3 style="margin-top: var(--spacing-lg); color: var(--primary-dark);">⏰ Due Soon (<span class="status-count" id="due-soon-count">1</span>)</h3>
                     <div class="payments-grid" id="due-soon-grid">
                         <div class="payment-card" data-product="Maxis" data-due-day="29" data-due-time="15:23" data-details="PhoneBill">
                             <div class="payment-header">
                                 <div class="payment-icon status-due-soon">⏰</div>
                                 <div class="payment-name">Maxis</div>
-                                <div class="payment-days days-due-soon">2 days until due</div>
+                                <div class="payment-days days-due-soon">1 day until due</div>
                             </div>
                             <div class="payment-details">
                                 <div class="payment-due-date">📅 Due: <span class="next-due-date">Loading...</span> (Day 29)</div>
@@ -961,10 +987,10 @@
                         <div class="calendar-day">
                             <div class="calendar-date">26</div>
                         </div>
-                        <div class="calendar-day today">
+                        <div class="calendar-day">
                             <div class="calendar-date">27</div>
                         </div>
-                        <div class="calendar-day">
+                        <div class="calendar-day today">
                             <div class="calendar-date">28</div>
                         </div>
                         <div class="calendar-day">
@@ -990,8 +1016,8 @@
         <footer>
             <div class="footer-content">
                 <div class="footer-brand">Monthly Payment Due Alerts</div>
-                <p>Generated on March 27, 2025 • Total Payments: <span id="footer-total">3</span></p>
-                <p>Overdue/Due Today: <span id="footer-overdue">2</span> • Due Soon: <span id="footer-due-soon">1</span> • Last updated: <span id="footer-updated-time">2025-03-27 18:39</span></p>
+                <p>Generated on March 28, 2025 • Total Payments: <span id="footer-total">3</span></p>
+                <p>Overdue/Due Today: <span id="footer-overdue">2</span> • Due Soon: <span id="footer-due-soon">1</span> • Last updated: <span id="footer-updated-time">2025-03-28 01:58</span></p>
                 <div class="footer-links">
                     <a href="#">Home</a>
                     <a href="#">Payments</a>
@@ -1322,7 +1348,7 @@
                 section.id = `status-section-${newStatus.toLowerCase().replace(' ', '-')}`;
 
                 section.innerHTML = `
-                    <h3 style='margin-top: 30px; color: var(--primary-dark);'>${statusEmoji} ${newStatus} (<span class='status-count' id='${newStatus.toLowerCase().replace(' ', '-')}-count'>1</span>)</h3>
+                    <h3 style='margin-top: var(--spacing-lg); color: var(--primary-dark);'>${statusEmoji} ${newStatus} (<span class='status-count' id='${newStatus.toLowerCase().replace(' ', '-')}-count'>1</span>)</h3>
                     <div class='payments-grid' id='${newStatus.toLowerCase().replace(' ', '-')}-grid'></div>
                 `;
 
@@ -1509,6 +1535,7 @@
     </script>
 </body>
 </html>
+
 
 
 
